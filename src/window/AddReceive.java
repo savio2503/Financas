@@ -34,10 +34,11 @@ public class AddReceive extends JFrame {
 	private JPanel contentPane;
 	
 	private String[] nameAccounts = null;
+	private List<Account> accounts = null;
 	
 	private void setupNames() {
 		
-		List<Account> accounts = SQLUtil.getAccounts();
+		accounts = SQLUtil.getAccounts();
 		
 		if (accounts.size() == 0) {
 			nameAccounts = new String[] {"NAO HA CONTA CADASTRADA"};
@@ -66,7 +67,8 @@ public class AddReceive extends JFrame {
 		setupNames();
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(x, y, 384, 252);
+		//setBounds(x, y, 384, 252);
+		setBounds(0, 0, 384, 252);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -100,10 +102,25 @@ public class AddReceive extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				int pos = comboBoxConta.getSelectedIndex();
 				
-				if (pos < 1) {
-					JOptionPane.showMessageDialog(new JFrame(), "CONTA NAO SELECIONADA", "Dialog", JOptionPane.ERROR_MESSAGE);
-				} else {
+				if (accounts.size() > 0 && pos > 0) {
+					Double valor = 0.0;
 					
+					if (!formattedValue.getText().isBlank()) {
+						String aux = formattedValue.getText();
+						
+						aux = aux.replace(".", "");
+						aux = aux.replace(",", ".");
+						
+						valor = Double.parseDouble(aux);
+					}
+					
+					int id = accounts.get(comboBoxConta.getSelectedIndex() - 1).id;
+					
+					if (SQLUtil.addReceipt(id, valor)) {
+						System.out.println("Adicionado com sucesso");
+					} else {
+						System.out.println("Erro ao incrementar");
+					}
 				}
 			}
 		});

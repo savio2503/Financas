@@ -107,7 +107,7 @@ public class ModConta extends JFrame {
 		comboBoxNome.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				
-				if (accounts.size() > 1 && comboBoxNome.getSelectedIndex() > 0) {
+				if (accounts.size() > 0 && comboBoxNome.getSelectedIndex() > 0) {
 					
 					Account accountAux = accounts.get(comboBoxNome.getSelectedIndex() - 1);
 					

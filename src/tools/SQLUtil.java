@@ -336,4 +336,34 @@ public class SQLUtil {
 		
 		return result;
 	}
+	
+	public static boolean addReceipt(int id, Double valor) {
+		
+		String query = "UPDATE ACCOUNT \r\n " 
+				+ " SET VALOR_ATUAL = VALOR_ATUAL + ? \r\n " 
+				+ " WHERE ID = ?;";
+		
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:sqlite:C:/sqlite/banco.db")) {
+		
+			PreparedStatement preparedStmt = connection.prepareStatement(query);
+			preparedStmt.setDouble(1, valor);
+			preparedStmt.setInt   (2, id);
+			
+			preparedStmt.execute();
+		
+			connection.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
 }
