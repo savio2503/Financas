@@ -43,7 +43,8 @@ public class Main extends JFrame {
 		int y = (int) ((dimension.getHeight() / 2) - (417 / 2));
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(x, y, 277, 417);
+		//setBounds(x, y, 277, 417);
+		setBounds(0, 0, 277, 421);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -101,7 +102,7 @@ public class Main extends JFrame {
 		contentPane.add(btnRecebimento);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(30, 191, 200, 2);
+		separator.setBounds(29, 222, 200, 2);
 		contentPane.add(separator);
 		
 		JButton btnModConta = new JButton("CONTA");
@@ -112,7 +113,7 @@ public class Main extends JFrame {
 				frame.setVisible(true);
 			}
 		});
-		btnModConta.setBounds(29, 226, 200, 23);
+		btnModConta.setBounds(28, 257, 200, 23);
 		contentPane.add(btnModConta);
 		
 		JButton btnModCard = new JButton("CART\u00C3O");
@@ -123,21 +124,28 @@ public class Main extends JFrame {
 				frame.setVisible(true);
 			}
 		});
-		btnModCard.setBounds(30, 260, 199, 23);
+		btnModCard.setBounds(29, 291, 199, 23);
 		contentPane.add(btnModCard);
 		
 		JButton btnModCusto = new JButton("CUSTO");
-		btnModCusto.setBounds(29, 294, 200, 23);
+		btnModCusto.setBounds(28, 325, 200, 23);
 		contentPane.add(btnModCusto);
 		
 		JLabel lblNewLabel = new JLabel("MODIFICAR");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(29, 201, 200, 14);
+		lblNewLabel.setBounds(28, 232, 200, 14);
 		contentPane.add(lblNewLabel);
 		
-		JButton btnNewButton_3 = new JButton("New button");
-		btnNewButton_3.setBounds(29, 328, 200, 23);
-		contentPane.add(btnNewButton_3);
+		JButton btnTransferencia = new JButton("TRANSFERIR");
+		btnTransferencia.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Transfer frame = new Transfer();
+				frame.setVisible(true);
+			}
+		});
+		btnTransferencia.setBounds(29, 191, 200, 23);
+		contentPane.add(btnTransferencia);
 	}
 	
 	private void getTotal(JLabel label) {

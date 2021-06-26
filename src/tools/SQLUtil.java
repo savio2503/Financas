@@ -366,4 +366,43 @@ public class SQLUtil {
 		
 		return true;
 	}
+	
+	public static boolean transferMoney(int idFonte, int idDestino, Double valor) {
+		
+		String queryDestino = "UPDATE ACCOUNT \r\n " 
+				+ " SET VALOR_ATUAL = VALOR_ATUAL + ? \r\n " 
+				+ " WHERE ID = ?;";
+		String queryFonte   = "UPDATE ACCOUNT \r\n " 
+				+ " SET VALOR_ATUAL = VALOR_ATUAL - ? \r\n " 
+				+ " WHERE ID = ?;";
+		
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:sqlite:C:/sqlite/banco.db")) {
+		
+			PreparedStatement preparedStmt = connection.prepareStatement(queryDestino);
+			preparedStmt.setDouble(1, valor);
+			preparedStmt.setInt   (2, idDestino);
+			
+			preparedStmt.execute();
+			
+			preparedStmt = connection.prepareStatement(queryFonte);
+			preparedStmt.setDouble(1, valor);
+			preparedStmt.setInt   (2, idFonte);
+			
+			preparedStmt.execute();
+		
+			connection.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
 }
