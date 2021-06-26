@@ -64,6 +64,7 @@ public class ModCard extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(x, y, 313, 352);
+		//setBounds(5, 5, 313, 352);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -111,34 +112,41 @@ public class ModCard extends JFrame {
 		comboBoxFechamento.setBounds(110, 208, 52, 22);
 		contentPane.add(comboBoxFechamento);
 		
-		JButton btnAdicionar = new JButton("MODIFICAR");
-		btnAdicionar.addMouseListener(new MouseAdapter() {
+		JComboBox comboBox = new JComboBox();
+		
+		JButton btnModificar = new JButton("MODIFICAR");
+		btnModificar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				String nome = textName.getText();
-				int vencimento = Integer.parseInt((String) comboBoxVencimento.getSelectedItem());
-				int fechamento = Integer.parseInt((String) comboBoxFechamento.getSelectedItem());
 				
-				Double limite = 0.0;
-				
-				if (!formattedValue.getText().isBlank()) {
-					String aux = formattedValue.getText();
+				if (cards.size() > 0 && comboBox.getSelectedIndex() > 0) {
+					String nome = textName.getText();
+					int vencimento = Integer.parseInt((String) comboBoxVencimento.getSelectedItem());
+					int fechamento = Integer.parseInt((String) comboBoxFechamento.getSelectedItem());
 					
-					aux = aux.replace(".", "");
-					aux = aux.replace(",", ".");
+					Double limite = 0.0;
 					
-					limite = Double.parseDouble(aux);
-				}
-				
-				if (!nome.isBlank() && SQLUtil.addCard(nome, limite, vencimento, fechamento)) {
-					System.out.println("inserido com sucesso");
+					if (!formattedValue.getText().isBlank()) {
+						String aux = formattedValue.getText();
+						
+						aux = aux.replace(".", "");
+						aux = aux.replace(",", ".");
+						
+						limite = Double.parseDouble(aux);
+					}
+					
+					int id = cards.get(comboBox.getSelectedIndex() - 1).id;
+					
+					if (!nome.isBlank() && SQLUtil.modificarCard(id, nome, limite, vencimento, fechamento)) {
+						System.out.println("inserido com sucesso");
+					}
 				}
 			}
 		});
-		btnAdicionar.setBounds(12, 273, 260, 23);
-		contentPane.add(btnAdicionar);
+		btnModificar.setBounds(12, 273, 260, 23);
+		contentPane.add(btnModificar);
 		
-		JComboBox comboBox = new JComboBox();
+		
 		comboBox.setModel(new DefaultComboBoxModel(nameCards));
 		comboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {

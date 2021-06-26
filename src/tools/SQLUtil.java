@@ -276,6 +276,39 @@ public class SQLUtil {
 		return true;
 	}
 	
+	public static boolean modificarCard(int id, String nome, Double limite, int vencimento, int fechamento) {
+		
+		String query = "UPDATE CARD SET \r\n"
+				+ "NOME = ?, LIMITE = ?, VENCIMENTO = ?, DIA_FECHAMENTO = ? \r\n" +
+				" WHERE ID = ?;";
+		
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:sqlite:C:/sqlite/banco.db")) {
+		
+			PreparedStatement preparedStmt = connection.prepareStatement(query);
+			preparedStmt.setString(1, nome);
+			preparedStmt.setDouble(2, limite);
+			preparedStmt.setInt   (3, vencimento);
+			preparedStmt.setInt   (4, fechamento);
+			preparedStmt.setInt   (5, id);
+			
+			preparedStmt.execute();
+		
+			connection.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+	
 	public static Double getTotalValueAccounts() {
 		
 		Double result = 0.0;
