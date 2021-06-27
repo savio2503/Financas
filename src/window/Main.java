@@ -14,6 +14,7 @@ import tools.SQLUtil;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -179,16 +180,25 @@ public class Main extends JFrame {
 		int year = now.getYear();
 		int month = now.getMonthValue();
 		
-		Double total = SQLUtil.getTotalValueAccounts();
-		label.setText(label.getText() + total.toString());
+		String datain = String.format("%d-%d-01", year, month);
+		String dataout;
+		if (month == 12) {
+			dataout = String.format("%d-01-01", year+1);
+		} else {
+			dataout = String.format("%d-%d-01", year, month+1);
+		}
+		
+		Date dtIn = Date.valueOf(datain);
+		Date dtOut = Date.valueOf(dataout);
+		
+		Double total = SQLUtil.getTotalValueCostMonth(dtIn, dtOut);
+		label.setText(String.format("%s %.2f", label.getText(), total));
 	}
 	
 	private void getTotal(JLabel label) {
 		
 		Double total = SQLUtil.getTotalValueAccounts();
 		
-		String result = label.getText() + total.toString();
-		
-		label.setText(result);
+		label.setText(String.format("%s %.2f", label.getText(), total));
 	}
 }

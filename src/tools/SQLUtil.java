@@ -406,10 +406,10 @@ public class SQLUtil {
 		return true;
 	}
 	
-	public static Double getTotalValueCostMonth(int MonthSelect) {
+	public static Double getTotalValueCostMonth(Date start, Date finish) {
 		
 		Double result = 0.0;
-		String query = "SELECT SUM(VALOR_TOTAL) FROM CUSTO WHERE DATA BETWEEN ? IN ?;";
+		String query = "SELECT SUM(VALOR_TOTAL) FROM CUSTO WHERE DATA BETWEEN ? AND ?;";
 		
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -419,10 +419,13 @@ public class SQLUtil {
 		
 		try (Connection connection = DriverManager.getConnection("jdbc:sqlite:C:/sqlite/banco.db")) {
 			
-			Statement stmt = connection.createStatement();
-			ResultSet rs;
+			PreparedStatement preparedStmt = connection.prepareStatement(query);
+			preparedStmt.setDate(1, start);
+			preparedStmt.setDate(2, finish);
 			
-			rs = stmt.executeQuery(query);
+			preparedStmt.execute();
+			
+			ResultSet rs = preparedStmt.getResultSet();
 			
 			while (rs.next() ) {
 				result = rs.getDouble(1);
