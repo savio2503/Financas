@@ -405,4 +405,32 @@ public class SQLUtil {
 		
 		return true;
 	}
+	
+	public static Double getTotalValueCostMonth(int MonthSelect) {
+		
+		Double result = 0.0;
+		String query = "SELECT SUM(VALOR_TOTAL) FROM CUSTO WHERE DATA BETWEEN ? IN ?;";
+		
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:sqlite:C:/sqlite/banco.db")) {
+			
+			Statement stmt = connection.createStatement();
+			ResultSet rs;
+			
+			rs = stmt.executeQuery(query);
+			
+			while (rs.next() ) {
+				result = rs.getDouble(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
 }

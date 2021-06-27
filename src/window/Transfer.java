@@ -1,7 +1,9 @@
 package window;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Toolkit;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -56,8 +58,12 @@ public class Transfer extends JFrame {
 		
 		setupNames();
 		
+		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+		int x = (int) ((dimension.getWidth() / 2) - (277 / 2));
+		int y = (int) ((dimension.getHeight() / 2) - (417 / 2));
+		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 300, 270);
+		setBounds(x, y, 300, 270);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
