@@ -1,13 +1,8 @@
 package code;
 
-import tools.SQLUtil;
-import window.AddAccount;
-import window.AddCard;
-import window.AddCost;
 import window.Main;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import tools.SQLUtil;
 
 public class Financas {
 

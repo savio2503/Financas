@@ -1,6 +1,5 @@
 package tools;
 
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -435,5 +434,66 @@ public class SQLUtil {
 		}
 		
 		return result;
+	}
+	
+	public static List<Cost> getCostMonth(Date start, Date finish) {
+		
+		List<Cost> costs = new ArrayList<Cost>();
+		List<Account> accounts = getAccounts();
+		List<Card> cards = getCards();
+		String query = "SELECT * FROM CUSTO WHERE DATA BETWEEN ? AND ?;";
+		
+		try {
+			Class.forName("org.sqlite.JDBC");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		try (Connection connection = DriverManager.getConnection("jdbc:sqlite:C:/sqlite/banco.db")) {
+			
+			PreparedStatement preparedStmt = connection.prepareStatement(query);
+			preparedStmt.setDate(1, start);
+			preparedStmt.setDate(2, finish);
+			
+			preparedStmt.execute();
+			
+			ResultSet rs = preparedStmt.getResultSet();
+			
+			while (rs.next() ) {
+				Cost aux = new Cost();
+				
+				aux.id = rs.getInt("ID");
+				aux.descricao = rs.getString("DESCRICAO");
+				aux.valor = rs.getDouble("VALOR_TOTAL");
+				aux.parcelas = rs.getInt("PARCERLAS");
+				aux.data = rs.getDate("DATA").toString();
+				int conta = rs.getInt("CONTA");
+				int cartao = rs.getInt("CARTAO");
+				aux.isFinish = rs.getBoolean("PAGO");
+				
+				if (conta != 0) {
+					for (Account account : accounts) {
+						if (conta == account.id) {
+							aux.conta = account.nome;
+							break;
+						}
+					}
+				} else if (cartao != 0) {
+					for (Card card : cards) {
+						if (cartao == card.id) {
+							aux.cartao = card.nome;
+							break;
+						}
+					}
+				}
+				
+				costs.add(aux);
+				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return costs;
 	}
 }

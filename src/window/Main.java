@@ -1,8 +1,6 @@
 package window;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
@@ -16,8 +14,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
@@ -26,6 +22,10 @@ import java.awt.event.FocusEvent;
 
 public class Main extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5091151183853352101L;
 	private JPanel contentPane;
 
 	/**
@@ -160,6 +160,8 @@ public class Main extends JFrame {
 		btnCustoMes.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				SeeCost frame = new SeeCost();
+				frame.setVisible(true);
 			}
 		});
 		btnCustoMes.setBounds(240, 89, 182, 26);

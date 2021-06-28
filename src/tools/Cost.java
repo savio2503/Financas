@@ -5,4 +5,8 @@ public class Cost {
 	public String descricao;
 	public Double valor;
 	public String data;
+	public int parcelas;
+	public String conta;
+	public String cartao;
+	public boolean isFinish;
 }
