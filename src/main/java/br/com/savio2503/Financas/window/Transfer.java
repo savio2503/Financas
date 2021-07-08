@@ -85,8 +85,8 @@ public class Transfer extends JFrame {
 		setupNames();
 		
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		int x = (int) ((dimension.getWidth() / 2) - (277 / 2));
-		int y = (int) ((dimension.getHeight() / 2) - (417 / 2));
+		int x = (int) ((dimension.getWidth() / 2) - (300 / 2));
+		int y = (int) ((dimension.getHeight() / 2) - (270 / 2));
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(x, y, 300, 270);

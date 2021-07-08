@@ -25,6 +25,7 @@
  */
 package main.java.br.com.savio2503.Financas.tools;
 
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -38,7 +39,7 @@ import java.util.List;
 public class SQLUtil {
 	
 	private static final String DEFAULT_DRIVER = "org.sqlite.JDBC";
-	private static final String DIR = "jdbc:sqlite:" + System.getProperty("user.dir") + "banco.db";
+	private static final String DIR = "jdbc:sqlite:" + System.getProperty("user.dir") + "/banco.db";
 	
 	private static Connection createConnection() throws ClassNotFoundException, SQLException {
 		Class.forName(DEFAULT_DRIVER);
@@ -101,13 +102,7 @@ public class SQLUtil {
 				+ "('DESCRICAO', 'VALOR_TOTAL', 'PARCERLAS', 'DATA', 'ANEXO', 'CONTA', 'CARTAO', 'PAGO') \r\n"
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 		
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		try (Connection connection = DriverManager.getConnection(DIR)) {
+		try (Connection connection = createConnection()) {
 			
 			// create the mysql insert preparedstatement
 			PreparedStatement preparedStmt = connection.prepareStatement(query);
@@ -124,7 +119,7 @@ public class SQLUtil {
 			
 			connection.close();
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -138,13 +133,7 @@ public class SQLUtil {
 				+ "('NOME', 'LIMITE', 'VENCIMENTO', 'DIA_FECHAMENTO') \r\n"
 				+ "VALUES (?, ?, ?, ?);";
 		
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		try (Connection connection = DriverManager.getConnection(DIR)) {
+		try (Connection connection = createConnection()) {
 			
 			PreparedStatement preparedStmt = connection.prepareStatement(query);
 			preparedStmt.setString(1, nome);
@@ -157,7 +146,7 @@ public class SQLUtil {
 			connection.close();
 			
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -171,13 +160,7 @@ public class SQLUtil {
 				+ "('NOME', 'VALOR_ATUAL') \r\n"
 				+ "VALUES (?, ?);";
 		
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		try (Connection connection = DriverManager.getConnection(DIR)) {
+		try (Connection connection = createConnection()) {
 			
 			PreparedStatement preparedStmt = connection.prepareStatement(query);
 			preparedStmt.setString(1, nome);
@@ -187,7 +170,7 @@ public class SQLUtil {
 			
 			connection.close();
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -208,13 +191,7 @@ public class SQLUtil {
 		
 		List<Card> result = new ArrayList<Card>();
 		
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		try (Connection connection = DriverManager.getConnection(DIR)) {
+		try (Connection connection = createConnection()) {
 			
 			Statement stmt = connection.createStatement();
 			ResultSet rs;
@@ -233,7 +210,7 @@ public class SQLUtil {
 				result.add(aux);
 			}
 		
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
@@ -245,13 +222,7 @@ public class SQLUtil {
 		
 		List<Account> result = new ArrayList<Account>();
 		
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		try (Connection connection = DriverManager.getConnection(DIR)) {
+		try (Connection connection = createConnection()) {
 			
 			Statement stmt = connection.createStatement();
 			ResultSet rs;
@@ -269,7 +240,7 @@ public class SQLUtil {
 			
 			connection.close();
 			
-		}  catch (SQLException e) {
+		}  catch (Exception e) {
 			e.printStackTrace();
 		}
 		
@@ -280,13 +251,7 @@ public class SQLUtil {
 		
 		String query = "UPDATE ACCOUNT SET NOME = ?, VALOR_ATUAL = ? WHERE ID = ?;";
 		
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		try (Connection connection = DriverManager.getConnection(DIR)) {
+		try (Connection connection = createConnection()) {
 		
 			PreparedStatement preparedStmt = connection.prepareStatement(query);
 			preparedStmt.setString(1, nome);
@@ -297,7 +262,7 @@ public class SQLUtil {
 		
 			connection.close();
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -311,13 +276,7 @@ public class SQLUtil {
 				+ "NOME = ?, LIMITE = ?, VENCIMENTO = ?, DIA_FECHAMENTO = ? \r\n" +
 				" WHERE ID = ?;";
 		
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		try (Connection connection = DriverManager.getConnection(DIR)) {
+		try (Connection connection = createConnection()) {
 		
 			PreparedStatement preparedStmt = connection.prepareStatement(query);
 			preparedStmt.setString(1, nome);
@@ -330,7 +289,7 @@ public class SQLUtil {
 		
 			connection.close();
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -343,13 +302,7 @@ public class SQLUtil {
 		Double result = 0.0;
 		String query = "SELECT SUM(ACCOUNT.VALOR_ATUAL) from ACCOUNT;";
 		
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		try (Connection connection = DriverManager.getConnection(DIR)) {
+		try (Connection connection = createConnection()) {
 			
 			Statement stmt = connection.createStatement();
 			ResultSet rs;
@@ -359,7 +312,7 @@ public class SQLUtil {
 			while (rs.next() ) {
 				result = rs.getDouble(1);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
@@ -372,13 +325,7 @@ public class SQLUtil {
 				+ " SET VALOR_ATUAL = VALOR_ATUAL + ? \r\n " 
 				+ " WHERE ID = ?;";
 		
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		try (Connection connection = DriverManager.getConnection(DIR)) {
+		try (Connection connection = createConnection()) {
 		
 			PreparedStatement preparedStmt = connection.prepareStatement(query);
 			preparedStmt.setDouble(1, valor);
@@ -388,7 +335,7 @@ public class SQLUtil {
 		
 			connection.close();
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -405,13 +352,7 @@ public class SQLUtil {
 				+ " SET VALOR_ATUAL = VALOR_ATUAL - ? \r\n " 
 				+ " WHERE ID = ?;";
 		
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		try (Connection connection = DriverManager.getConnection(DIR)) {
+		try (Connection connection = createConnection()) {
 		
 			PreparedStatement preparedStmt = connection.prepareStatement(queryDestino);
 			preparedStmt.setDouble(1, valor);
@@ -427,7 +368,7 @@ public class SQLUtil {
 		
 			connection.close();
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -440,13 +381,7 @@ public class SQLUtil {
 		Double result = 0.0;
 		String query = "SELECT SUM(VALOR_TOTAL) FROM CUSTO WHERE DATA BETWEEN ? AND ?;";
 		
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		try (Connection connection = DriverManager.getConnection(DIR)) {
+		try (Connection connection = createConnection()) {
 			
 			PreparedStatement preparedStmt = connection.prepareStatement(query);
 			preparedStmt.setDate(1, start);
@@ -459,7 +394,7 @@ public class SQLUtil {
 			while (rs.next() ) {
 				result = rs.getDouble(1);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
@@ -473,13 +408,7 @@ public class SQLUtil {
 		List<Card> cards = getCards();
 		String query = "SELECT * FROM CUSTO WHERE DATA BETWEEN ? AND ?;";
 		
-		try {
-			Class.forName("org.sqlite.JDBC");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
-		try (Connection connection = DriverManager.getConnection(DIR)) {
+		try (Connection connection = createConnection()) {
 			
 			PreparedStatement preparedStmt = connection.prepareStatement(query);
 			preparedStmt.setDate(1, start);
@@ -520,10 +449,38 @@ public class SQLUtil {
 				costs.add(aux);
 				
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return costs;
+	}
+	
+	public static byte[] getAnexo(int idCost) {
+		
+		byte[] result = null;
+		
+		String query = "SELECT ANEXO FROM CUSTO WHERE ID = ?";
+		
+		try (Connection connection = createConnection()) {
+			
+			PreparedStatement prepareStmt = connection.prepareStatement(query);
+			prepareStmt.setInt(1, idCost);
+			
+			prepareStmt.execute();
+			
+			ResultSet rs = prepareStmt.getResultSet();
+			
+			while (rs.next()) {
+				
+				result = rs.getBytes("ANEXO");
+			}
+			
+		} catch (Exception e ) {
+			e.printStackTrace();
+		}
+		
+		
+		return result;
 	}
 }

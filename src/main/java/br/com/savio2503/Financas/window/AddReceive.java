@@ -92,8 +92,8 @@ public class AddReceive extends JFrame {
 		setupNames();
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		//setBounds(x, y, 384, 252);
-		setBounds(0, 0, 384, 252);
+		setBounds(x, y, 384, 252);
+		//setBounds(0, 0, 384, 252);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

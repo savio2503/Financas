@@ -26,6 +26,7 @@
 package main.java.br.com.savio2503.Financas.window;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -51,6 +52,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.beans.PropertyChangeListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.beans.PropertyChangeEvent;
@@ -141,12 +146,12 @@ public class SeeCost extends JFrame {
 	public SeeCost() {
 		
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		int x = (int) ((dimension.getWidth() / 2) - (712 / 2));
-		int y = (int) ((dimension.getHeight() / 2) - (450 / 2));
+		int x = (int) ((dimension.getWidth() / 2) - (598 / 2));
+		int y = (int) ((dimension.getHeight() / 2) - (478 / 2));
 		
 		//setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		//setBounds(x, y, 712, 450);
-		setBounds(100, 100, 712, 450);
+		setBounds(x, y, 598, 478);
+		//setBounds(100, 100, 598, 478);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -198,28 +203,65 @@ public class SeeCost extends JFrame {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		
 		scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(10, 83, 556, 307);
+		scrollPane.setBounds(20, 83, 556, 307);
 		contentPane.add(scrollPane);
 		
 		JLabel lblNewLabel = new JLabel("SELECIONE O M\u00CAS:");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel.setBounds(288, 55, 121, 16);
+		lblNewLabel.setBounds(257, 55, 152, 16);
 		contentPane.add(lblNewLabel);
 		
-		JButton btnAnexo = new JButton("VER ANEXO");
-		btnAnexo.setBounds(578, 214, 100, 26);
-		btnAnexo.addMouseListener(new MouseAdapter() {
+		JButton btnExtract = new JButton("EXTRAIR ANEXO");
+		btnExtract.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+				extractPDF(table.getSelectedRow());
 			}
 		});
-		contentPane.add(btnAnexo);
-		
-		JButton btnExtract = new JButton("EXTRAIR");
-		btnExtract.setBounds(578, 252, 100, 26);
+		btnExtract.setBounds(204, 405, 176, 26);
 		contentPane.add(btnExtract);
 		
 		setup();
+	}
+	
+	private void extractPDF(int idCost) {
+		
+		byte[] pdf = SQLUtil.getAnexo(custos.get(idCost).id);
+		
+		if (pdf == null) {
+			System.out.println("nao existe anexo para o id: " + custos.get(idCost).id);
+		} else {
+			System.out.println("salvando...");
+			
+			String nameFile = custos.get(idCost).descricao;
+			nameFile = nameFile.replace(' ', '_');
+			
+			String dirFile = null;
+			
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			fileChooser.setCurrentDirectory(new java.io.File("."));
+			fileChooser.setDialogTitle("Selecione a pasta de saida");
+			
+			if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+				
+				dirFile = fileChooser.getSelectedFile().toString();
+				
+				String completo = dirFile + '/' + nameFile + ".pdf";
+				
+				System.out.println("-> " + completo);
+				
+				try (FileOutputStream fos = new FileOutputStream(completo)) {
+					
+					fos.write(pdf);
+					fos.flush();
+					fos.close();
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
 	}
 }

@@ -68,12 +68,12 @@ public class Main extends JFrame {
 		});
 		
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		int x = (int) ((dimension.getWidth() / 2) - (455 / 2));
-		int y = (int) ((dimension.getHeight() / 2) - (374 / 2));
+		int x = (int) ((dimension.getWidth() / 2) - (500 / 2));
+		int y = (int) ((dimension.getHeight() / 2) - (404 / 2));
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//setBounds(x, y, 455, 374);
-		setBounds(100, 100, 433, 404);
+		setBounds(x, y, 500, 404);
+		//setBounds(100, 100, 500, 404);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -81,7 +81,7 @@ public class Main extends JFrame {
 		
 		
 		lblValor.setHorizontalAlignment(SwingConstants.CENTER);
-		lblValor.setBounds(11, 13, 182, 14);
+		lblValor.setBounds(20, 20, 460, 14);
 		contentPane.add(lblValor);
 		
 		getTotal(lblValor);
@@ -94,7 +94,21 @@ public class Main extends JFrame {
 				frame.setVisible(true);
 			}
 		});
-		btnCusto.setBounds(221, 79, 182, 23);
+		
+		JLabel lblCustoMes = new JLabel("Custo no m\u00EAs: R$ ");
+		lblCustoMes.setHorizontalAlignment(SwingConstants.CENTER);
+		lblCustoMes.setBounds(20, 38, 460, 16);
+		contentPane.add(lblCustoMes);
+		
+		getCustoMes(lblCustoMes);
+		
+		JLabel lblPrevisto = new JLabel("Valor Previsto R$: ");
+		lblPrevisto.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPrevisto.setBounds(20, 60, 460, 16);
+		contentPane.add(lblPrevisto);
+		
+		getPrevisto(lblPrevisto);
+		btnCusto.setBounds(264, 97, 216, 23);
 		contentPane.add(btnCusto);
 		
 		JButton btnCard = new JButton("ADICIONAR CART\u00C3O");
@@ -105,7 +119,7 @@ public class Main extends JFrame {
 				frame.setVisible(true);
 			}
 		});
-		btnCard.setBounds(11, 79, 182, 23);
+		btnCard.setBounds(22, 97, 216, 23);
 		contentPane.add(btnCard);
 		
 		JButton btnAccount = new JButton("ADICIONAR CONTA");
@@ -116,7 +130,7 @@ public class Main extends JFrame {
 				frame.setVisible(true);
 			}
 		});
-		btnAccount.setBounds(11, 113, 182, 23);
+		btnAccount.setBounds(22, 131, 216, 23);
 		contentPane.add(btnAccount);
 		
 		JButton btnRecebimento = new JButton("ADICIONAR RECEBIMENTO");
@@ -127,11 +141,11 @@ public class Main extends JFrame {
 				frame.setVisible(true);
 			}
 		});
-		btnRecebimento.setBounds(11, 147, 182, 23);
+		btnRecebimento.setBounds(22, 165, 216, 23);
 		contentPane.add(btnRecebimento);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(11, 215, 182, 2);
+		separator.setBounds(22, 233, 216, 2);
 		contentPane.add(separator);
 		
 		JButton btnModConta = new JButton("CONTA");
@@ -142,7 +156,7 @@ public class Main extends JFrame {
 				frame.setVisible(true);
 			}
 		});
-		btnModConta.setBounds(10, 247, 182, 23);
+		btnModConta.setBounds(21, 265, 217, 23);
 		contentPane.add(btnModConta);
 		
 		JButton btnModCard = new JButton("CART\u00C3O");
@@ -153,16 +167,16 @@ public class Main extends JFrame {
 				frame.setVisible(true);
 			}
 		});
-		btnModCard.setBounds(11, 281, 182, 23);
+		btnModCard.setBounds(22, 299, 216, 23);
 		contentPane.add(btnModCard);
 		
 		JButton btnModCusto = new JButton("CUSTO");
-		btnModCusto.setBounds(10, 315, 182, 23);
+		btnModCusto.setBounds(21, 333, 217, 23);
 		contentPane.add(btnModCusto);
 		
 		JLabel lblNewLabel = new JLabel("MODIFICAR");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(10, 222, 182, 14);
+		lblNewLabel.setBounds(21, 240, 217, 14);
 		contentPane.add(lblNewLabel);
 		
 		JButton btnTransferencia = new JButton("TRANSFERIR");
@@ -173,12 +187,12 @@ public class Main extends JFrame {
 				frame.setVisible(true);
 			}
 		});
-		btnTransferencia.setBounds(11, 181, 182, 23);
+		btnTransferencia.setBounds(22, 199, 216, 23);
 		contentPane.add(btnTransferencia);
 		
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setOrientation(SwingConstants.VERTICAL);
-		separator_1.setBounds(210, 79, 2, 260);
+		separator_1.setBounds(250, 97, 2, 260);
 		contentPane.add(separator_1);
 		
 		JButton btnCustoMes = new JButton("VER CUSTOS");
@@ -189,41 +203,27 @@ public class Main extends JFrame {
 				frame.setVisible(true);
 			}
 		});
-		btnCustoMes.setBounds(221, 113, 182, 26);
+		btnCustoMes.setBounds(264, 129, 216, 26);
 		contentPane.add(btnCustoMes);
 		
-		JLabel lblCustoMes = new JLabel("Custo no m\u00EAs: R$ ");
-		lblCustoMes.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCustoMes.setBounds(221, 23, 182, 16);
-		contentPane.add(lblCustoMes);
-		
-		getCustoMes(lblCustoMes);
-		
-		JLabel lblPrevisto = new JLabel("Valor Previsto R$: ");
-		lblPrevisto.setHorizontalAlignment(SwingConstants.CENTER);
-		lblPrevisto.setBounds(21, 38, 172, 16);
-		contentPane.add(lblPrevisto);
-		
 		JSeparator separator_2 = new JSeparator();
-		separator_2.setBounds(221, 147, 182, 2);
+		separator_2.setBounds(264, 165, 216, 2);
 		contentPane.add(separator_2);
 		
 		JButton btnPagarFatura = new JButton("PAGAR FATURA");
-		btnPagarFatura.setBounds(221, 160, 182, 26);
+		btnPagarFatura.setBounds(264, 178, 216, 26);
 		contentPane.add(btnPagarFatura);
 		
-		getPrevisto(lblPrevisto);
-		
 		JSeparator separator_3 = new JSeparator();
-		separator_3.setBounds(221, 236, 182, 2);
+		separator_3.setBounds(264, 254, 216, 2);
 		contentPane.add(separator_3);
 		
 		JButton btnTarget = new JButton("OBJETIVOS");
-		btnTarget.setBounds(221, 247, 182, 26);
+		btnTarget.setBounds(264, 263, 216, 26);
 		contentPane.add(btnTarget);
 		
 		JButton btnFuture = new JButton("FATURA FUTURAS");
-		btnFuture.setBounds(221, 198, 182, 26);
+		btnFuture.setBounds(264, 216, 216, 26);
 		contentPane.add(btnFuture);
 	}
 	
