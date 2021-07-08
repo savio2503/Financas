@@ -34,4 +34,5 @@ public class Cost {
 	public String conta;
 	public String cartao;
 	public boolean isFinish;
+	public boolean assinatura;
 }

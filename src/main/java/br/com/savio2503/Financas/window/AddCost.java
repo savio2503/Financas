@@ -59,6 +59,7 @@ import java.nio.file.Paths;
 import java.sql.Date;
 
 import javax.swing.SwingConstants;
+import javax.swing.JCheckBox;
 
 public class AddCost extends JFrame {
 	/**
@@ -119,33 +120,30 @@ public class AddCost extends JFrame {
 		setupNames();
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(x, y, 450, 446);
+		setBounds(100, 100, 500, 393);;//setBounds(x, y, 450, 446);
 		getContentPane().setLayout(null);
 		
 		JLabel lbTitle = new JLabel("ADICIONAR CUSTO");
-		lbTitle.setBounds(153, 11, 115, 14);
+		lbTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lbTitle.setBounds(12, 11, 426, 14);
 		getContentPane().add(lbTitle);
 		
-		JButton btnCancel = new JButton("CANCELAR");
-		btnCancel.setBounds(234, 350, 103, 23);
-		getContentPane().add(btnCancel);
-		
 		JLabel lblDescricao = new JLabel("DESCRI\u00C7\u00C3O:");
-		lblDescricao.setBounds(10, 48, 71, 14);
+		lblDescricao.setBounds(10, 48, 108, 14);
 		getContentPane().add(lblDescricao);
 		
 		textFieldDescricao = new JTextField();
 		textFieldDescricao.setHorizontalAlignment(SwingConstants.CENTER);
-		textFieldDescricao.setBounds(85, 45, 320, 20);
+		textFieldDescricao.setBounds(118, 46, 320, 20);
 		getContentPane().add(textFieldDescricao);
 		textFieldDescricao.setColumns(10);
 		
-		JLabel lblValor = new JLabel("VALOR:  R$");
-		lblValor.setBounds(10, 99, 71, 14);
+		JLabel lblValor = new JLabel("VALOR: R$");
+		lblValor.setBounds(10, 99, 80, 14);
 		getContentPane().add(lblValor);
 		
 		JLabel lblParcelas = new JLabel("QUANT. PARCELAS: ");
-		lblParcelas.setBounds(234, 99, 115, 14);
+		lblParcelas.setBounds(293, 99, 145, 14);
 		getContentPane().add(lblParcelas);
 		
 		JLabel lblData = new JLabel("DATA:");
@@ -163,23 +161,27 @@ public class AddCost extends JFrame {
 		getContentPane().add(datePicker);
 		
 		JLabel lblComprovante = new JLabel("ADD COMPROVANTE:");
-		lblComprovante.setBounds(10, 180, 125, 14);
+		lblComprovante.setBounds(10, 185, 164, 14);
 		getContentPane().add(lblComprovante);
 		
 		JLabel lblConta = new JLabel("ASSOCIAR A UMA CONTA:");
-		lblConta.setBounds(10, 243, 154, 14);
+		lblConta.setBounds(10, 243, 248, 14);
 		getContentPane().add(lblConta);
 		
 		JComboBox comboBoxParcelas = new JComboBox();
 		comboBoxParcelas.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"}));
 		comboBoxParcelas.setSelectedIndex(0);
-		comboBoxParcelas.setBounds(355, 95, 50, 22);
+		comboBoxParcelas.setBounds(438, 95, 50, 22);
 		getContentPane().add(comboBoxParcelas);
 		
 		JMoneyFieldValor formattedValue = new JMoneyFieldValor();
 		formattedValue.setHorizontalAlignment(SwingConstants.RIGHT);
-		formattedValue.setBounds(85,96,130,20);
+		formattedValue.setBounds(95,96,130,20);
 		getContentPane().add(formattedValue);
+		
+		JCheckBox chckbxNewCheckBox = new JCheckBox("ASSINATURA?");
+		chckbxNewCheckBox.setBounds(359, 136, 129, 23);
+		getContentPane().add(chckbxNewCheckBox);
 
 		JComboBox comboBoxCard = new JComboBox();
 		JComboBox comboBoxAccount = new JComboBox();
@@ -221,7 +223,7 @@ public class AddCost extends JFrame {
 					
 					Date data = Date.valueOf(dataText);
 					
-					if (SQLUtil.addCost(descricao, valor, parcelas, data, arquivo, conta, cartao))
+					if (SQLUtil.addCost(descricao, valor, parcelas, data, arquivo, conta, cartao, chckbxNewCheckBox.isSelected()))
 						System.out.println("adicionada com sucesso");
 				}
 				else {
@@ -232,7 +234,7 @@ public class AddCost extends JFrame {
 				
 			}
 		});
-		btnAdd.setBounds(60, 350, 103, 23);
+		btnAdd.setBounds(189, 330, 123, 23);
 		getContentPane().add(btnAdd);
 		
 		JButton btnAnexo = new JButton("SELECIONAR ARQUIVO");
@@ -250,7 +252,7 @@ public class AddCost extends JFrame {
 		getContentPane().add(btnAnexo);
 		
 		JLabel lblCard = new JLabel("ASSOCIAR A UM CART\u00C3O:");
-		lblCard.setBounds(10, 290, 154, 14);
+		lblCard.setBounds(10, 290, 236, 14);
 		getContentPane().add(lblCard);
 		
 		
@@ -265,7 +267,7 @@ public class AddCost extends JFrame {
 			}
 		});
 		comboBoxCard.setModel(new DefaultComboBoxModel(nameCards));
-		comboBoxCard.setBounds(169, 290, 236, 22);
+		comboBoxCard.setBounds(252, 286, 236, 22);
 		getContentPane().add(comboBoxCard);
 		
 		
@@ -280,7 +282,7 @@ public class AddCost extends JFrame {
 			}
 		});
 		comboBoxAccount.setModel(new DefaultComboBoxModel(nameAccounts));
-		comboBoxAccount.setBounds(171, 239, 234, 22);
+		comboBoxAccount.setBounds(254, 239, 234, 22);
 		getContentPane().add(comboBoxAccount);
 	}
 	

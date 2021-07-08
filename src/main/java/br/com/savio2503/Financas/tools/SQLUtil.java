@@ -59,6 +59,7 @@ public class SQLUtil {
 				+ "	\"CONTA\"	INTEGER,\r\n"
 				+ "	\"CARTAO\"	INTEGER,\r\n"
 				+ "	\"PAGO\"	INTEGER,\r\n"
+				+ "	\"ASSINATURA\"	INTEGER,\r\n"
 				+ "	PRIMARY KEY(\"ID\" AUTOINCREMENT)\r\n"
 				+ ");";
 		
@@ -96,11 +97,11 @@ public class SQLUtil {
 		}
 	}
 	
-	public static boolean addCost(String descricao, Double valor, int parcelas, Date data, byte[] anexo, int conta, int cartao) {
+	public static boolean addCost(String descricao, Double valor, int parcelas, Date data, byte[] anexo, int conta, int cartao, boolean assinatura) {
 		
 		String query = "INSERT INTO CUSTO \r\n"
-				+ "('DESCRICAO', 'VALOR_TOTAL', 'PARCERLAS', 'DATA', 'ANEXO', 'CONTA', 'CARTAO', 'PAGO') \r\n"
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+				+ "('DESCRICAO', 'VALOR_TOTAL', 'PARCERLAS', 'DATA', 'ANEXO', 'CONTA', 'CARTAO', 'PAGO', 'ASSINATURA') \r\n"
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 		
 		try (Connection connection = createConnection()) {
 			
@@ -114,6 +115,7 @@ public class SQLUtil {
 			preparedStmt.setInt    (6, conta);
 			preparedStmt.setInt    (7, cartao);
 			preparedStmt.setInt    (8, parcelas == 1 ? 1 : 0);
+			preparedStmt.setBoolean(9, assinatura);
 			
 			preparedStmt.execute();
 			
@@ -429,6 +431,7 @@ public class SQLUtil {
 				int conta = rs.getInt("CONTA");
 				int cartao = rs.getInt("CARTAO");
 				aux.isFinish = rs.getBoolean("PAGO");
+				aux.assinatura = rs.getBoolean("ASSINATURA");
 				
 				if (conta != 0) {
 					for (Account account : accounts) {

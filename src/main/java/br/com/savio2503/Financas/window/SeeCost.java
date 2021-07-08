@@ -82,7 +82,8 @@ public class SeeCost extends JFrame {
 						            "DATA",
 						            "CONTA",
 						            "CARTAO",
-						            "PAGO"};
+						            "PAGO",
+						            "ASSINATURA"};
 	
 	private void setup() {
 		LocalDateTime now = LocalDateTime.now();
@@ -129,6 +130,7 @@ public class SeeCost extends JFrame {
 				data[4] = custos.get(i).conta  != null ? custos.get(i).conta : "-------";
 				data[5] = custos.get(i).cartao != null ? custos.get(i).cartao : "-------";
 				data[6] = custos.get(i).isFinish;
+				data[7] = custos.get(i).assinatura;
 				
 				tableModel.addRow(data);
 			}
