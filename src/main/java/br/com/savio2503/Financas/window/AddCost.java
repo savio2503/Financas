@@ -57,6 +57,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Date;
+import java.text.DecimalFormat;
 
 import javax.swing.SwingConstants;
 import javax.swing.JCheckBox;
@@ -114,18 +115,19 @@ public class AddCost extends JFrame {
 	public AddCost() {
 		
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		int x = (int) ((dimension.getWidth() / 2) - (450 / 2));
-		int y = (int) ((dimension.getHeight() / 2) - (446 / 2));
+		int x = (int) ((dimension.getWidth() / 2)  - (500 / 2));
+		int y = (int) ((dimension.getHeight() / 2) - (413 / 2));
 		
 		setupNames();
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 500, 393);;//setBounds(x, y, 450, 446);
+		//setBounds(100, 100, 500, 413);
+		setBounds(x, y, 500, 413);
 		getContentPane().setLayout(null);
 		
 		JLabel lbTitle = new JLabel("ADICIONAR CUSTO");
 		lbTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		lbTitle.setBounds(12, 11, 426, 14);
+		lbTitle.setBounds(12, 11, 456, 14);
 		getContentPane().add(lbTitle);
 		
 		JLabel lblDescricao = new JLabel("DESCRI\u00C7\u00C3O:");
@@ -143,7 +145,7 @@ public class AddCost extends JFrame {
 		getContentPane().add(lblValor);
 		
 		JLabel lblParcelas = new JLabel("QUANT. PARCELAS: ");
-		lblParcelas.setBounds(293, 99, 145, 14);
+		lblParcelas.setBounds(293, 99, 123, 14);
 		getContentPane().add(lblParcelas);
 		
 		JLabel lblData = new JLabel("DATA:");
@@ -171,7 +173,7 @@ public class AddCost extends JFrame {
 		JComboBox comboBoxParcelas = new JComboBox();
 		comboBoxParcelas.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"}));
 		comboBoxParcelas.setSelectedIndex(0);
-		comboBoxParcelas.setBounds(438, 95, 50, 22);
+		comboBoxParcelas.setBounds(418, 95, 50, 22);
 		getContentPane().add(comboBoxParcelas);
 		
 		JMoneyFieldValor formattedValue = new JMoneyFieldValor();
@@ -223,7 +225,7 @@ public class AddCost extends JFrame {
 					
 					Date data = Date.valueOf(dataText);
 					
-					if (SQLUtil.addCost(descricao, valor, parcelas, data, arquivo, conta, cartao, chckbxNewCheckBox.isSelected()))
+					if (saveCost(descricao, valor, parcelas, data, conta, cartao, chckbxNewCheckBox.isSelected()))
 						System.out.println("adicionada com sucesso");
 				}
 				else {
@@ -234,7 +236,7 @@ public class AddCost extends JFrame {
 				
 			}
 		});
-		btnAdd.setBounds(189, 330, 123, 23);
+		btnAdd.setBounds(170, 330, 123, 23);
 		getContentPane().add(btnAdd);
 		
 		JButton btnAnexo = new JButton("SELECIONAR ARQUIVO");
@@ -267,7 +269,7 @@ public class AddCost extends JFrame {
 			}
 		});
 		comboBoxCard.setModel(new DefaultComboBoxModel(nameCards));
-		comboBoxCard.setBounds(252, 286, 236, 22);
+		comboBoxCard.setBounds(234, 286, 236, 22);
 		getContentPane().add(comboBoxCard);
 		
 		
@@ -282,8 +284,47 @@ public class AddCost extends JFrame {
 			}
 		});
 		comboBoxAccount.setModel(new DefaultComboBoxModel(nameAccounts));
-		comboBoxAccount.setBounds(254, 239, 234, 22);
+		comboBoxAccount.setBounds(234, 239, 234, 22);
 		getContentPane().add(comboBoxAccount);
+	}
+	
+	private boolean saveCost(String descricao, double valor, int parcelas, Date data, int conta, int cartao, boolean assinatura) {
+		
+		boolean result = false;
+		
+		if (parcelas > 1) {
+			if (cartao > 0) {
+				
+				DecimalFormat format = new DecimalFormat("##.00");
+				Double valueDivider = valor / parcelas;
+				Double valueParcelas = Double.valueOf(format.format(valueDivider).replace(',', '.'));
+				
+				for (int i = 1; i <= parcelas; i++) {
+					
+					Date dateAux = processDateParcelas(data, i-1);
+					
+					System.out.println("month -> " + dateAux.getMonth());
+					
+					result = SQLUtil.addCost(descricao, valueParcelas, i, dateAux, arquivo, 0, cartao, false);
+				}
+				
+			} else {
+				System.out.println("parcelas somente para cartoes");
+			}
+		} else {
+			result = SQLUtil.addCost(descricao, valor, parcelas, data, arquivo, conta, cartao, assinatura);
+		}
+
+		return result;
+	}
+	
+	private Date processDateParcelas(Date in, int mesAFrente) {
+		
+		Long dateProxLong = in.getTime() + (new Long("2678400000") * mesAFrente);
+		
+		Date resposta = new Date(dateProxLong);
+		
+		return resposta;
 	}
 	
 	private String getFile() {
