@@ -30,13 +30,19 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Toolkit;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
 import main.java.br.com.savio2503.Financas.tools.Account;
 import main.java.br.com.savio2503.Financas.tools.SQLUtil;
+import main.java.br.com.savio2503.Financas.util.DateLabelFormatter;
 import main.java.br.com.savio2503.Financas.util.JMoneyFieldValor;
 
 import javax.swing.JLabel;
@@ -46,6 +52,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
 
 public class Transfer extends JFrame {
 
@@ -86,10 +93,11 @@ public class Transfer extends JFrame {
 		
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		int x = (int) ((dimension.getWidth() / 2) - (300 / 2));
-		int y = (int) ((dimension.getHeight() / 2) - (270 / 2));
+		int y = (int) ((dimension.getHeight() / 2) - (314 / 2));
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(x, y, 300, 270);
+		setBounds(x, y, 300, 314);
+		//setBounds(100, 100, 300, 314);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -127,15 +135,26 @@ public class Transfer extends JFrame {
 		formattedValue.setBounds(80, 145, 190, 20);
 		getContentPane().add(formattedValue);
 		
+		UtilDateModel model = new UtilDateModel();
+		Properties properties = new Properties();
+		properties.put("text.today", "Today");
+		properties.put("text.month", "Month");
+		properties.put("text.year", "Year");
+		JDatePanelImpl datePanel = new JDatePanelImpl(model, properties);
+		JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+		datePicker.setBounds(130, 185, 139, 30);
+		getContentPane().add(datePicker);
+		
 		JButton btnTransferir = new JButton("TRANSFERIR");
 		btnTransferir.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-				if (accounts.size() > 0) {
+				if (accounts.size() > 0 && !datePicker.getJFormattedTextField().getText().isBlank()) {
 					
 					int idFonte = CBFonte.getSelectedIndex();
 					int idDesti = CBDestino.getSelectedIndex();
+					Date data = Date.valueOf(datePicker.getJFormattedTextField().getText());
 					
 					if (idFonte == 0 || idDesti == 0) {
 						System.out.println("Selecione as contas");
@@ -154,8 +173,11 @@ public class Transfer extends JFrame {
 							valor = Double.parseDouble(aux);
 						}
 						
-						if (SQLUtil.transferMoney(idFonte, idDesti, valor)) {
+						if (SQLUtil.transferMoney(idFonte, idDesti, valor, data)) {
 							System.out.println("Transferencia realizada com sucesso");
+							CBFonte.setSelectedIndex(0);
+							CBDestino.setSelectedIndex(0);
+							formattedValue.setText("0");
 						} else {
 							System.out.println("problemas no sql");
 						}
@@ -163,7 +185,11 @@ public class Transfer extends JFrame {
 				}
 			}
 		});
-		btnTransferir.setBounds(87, 193, 120, 26);
+		btnTransferir.setBounds(80, 241, 120, 26);
 		contentPane.add(btnTransferir);
+		
+		JLabel lblData = new JLabel("SELECIONE A DATA:");
+		lblData.setBounds(10, 190, 113, 14);
+		contentPane.add(lblData);
 	}
 }

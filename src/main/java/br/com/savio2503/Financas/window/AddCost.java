@@ -225,8 +225,15 @@ public class AddCost extends JFrame {
 					
 					Date data = Date.valueOf(dataText);
 					
-					if (saveCost(descricao, valor, parcelas, data, conta, cartao, chckbxNewCheckBox.isSelected()))
+					if (saveCost(descricao, valor, parcelas, data, conta, cartao, chckbxNewCheckBox.isSelected())) {
 						System.out.println("adicionada com sucesso");
+						textFieldDescricao.setText("");
+						comboBoxParcelas.setSelectedIndex(0);
+						formattedValue.setText("0");
+						chckbxNewCheckBox.setSelected(false);
+						comboBoxCard.setSelectedIndex(0);
+						comboBoxAccount.setSelectedIndex(0);
+					}
 				}
 				else {
 					System.out.println("alguem esta faltando");

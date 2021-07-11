@@ -63,6 +63,7 @@ public class AddAccount extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(x, y, 349, 237);
+		//setBounds(100, 100, 349, 237);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -85,6 +86,7 @@ public class AddAccount extends JFrame {
 		contentPane.add(btnCancelar);
 		
 		textNome = new JTextField();
+		textNome.setHorizontalAlignment(SwingConstants.CENTER);
 		textNome.setBounds(56, 50, 250, 20);
 		contentPane.add(textNome);
 		textNome.setColumns(10);
@@ -113,6 +115,8 @@ public class AddAccount extends JFrame {
 				if (!nome.isBlank()) {
 					if (SQLUtil.addAccount(nome, valor)) {
 						System.out.println("Conta adicionada com sucesso");
+						textNome.setText("");
+						formattedValue.setText("0");
 					}
 				} else {
 					JOptionPane.showMessageDialog(new JFrame(), "NOME NAO ESTA PREENCHIDO", "Dialog", JOptionPane.ERROR_MESSAGE);

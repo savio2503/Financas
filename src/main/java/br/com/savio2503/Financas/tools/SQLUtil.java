@@ -63,6 +63,18 @@ public class SQLUtil {
 				+ "	PRIMARY KEY(\"ID\" AUTOINCREMENT)\r\n"
 				+ ");";
 		
+		String commandTableSignature = "CREATE TABLE IF NOT EXISTS \"SIGNATURE\" (\r\n"
+				+ "	\"ID\"	INTEGER NOT NULL,\r\n"
+				+ "	\"DESCRICAO\"	TEXT NOT NULL,\r\n"
+				+ "	\"VALOR_TOTAL\"	REAL NOT NULL,\r\n"
+				+ "	\"PARCERLAS\"	INTEGER DEFAULT 1,\r\n"
+				+ "	\"DATA\"	DATE NOT NULL,\r\n"
+				+ "	\"VALOR_PAGO\"	REAL DEFAULT 0,\r\n"
+				+ "	\"ANEXO\"	BLOB,\r\n"
+				+ "	\"CARTAO\"	INTEGER,\r\n"
+				+ "	PRIMARY KEY(\"ID\" AUTOINCREMENT)\r\n"
+				+ ");";
+		
 		String commandTableCard = "CREATE TABLE IF NOT EXISTS \"CARD\" (\r\n"
 				+ "	\"ID\"	INTEGER NOT NULL,\r\n"
 				+ "	\"NOME\"	TEXT NOT NULL,\r\n"
@@ -79,6 +91,24 @@ public class SQLUtil {
 				+ "	PRIMARY KEY(\"ID\" AUTOINCREMENT)\r\n"
 				+ ");";
 		
+		String commandTableReceive = "CREATE TABLE IF NOT EXISTS \"RECEIVE\" (\r\n"
+				+ "	\"ID\"	INTEGER NOT NULL,\r\n"
+				+ " \"ACCOUNT\"	INTEGER NOT NULL,\r\n"
+				+ "	\"DESCRICAO\"	TEXT NOT NULL,\r\n"
+				+ "	\"VALOR\"	REAL NOT NULL,\r\n"
+				+ "	\"DATA\"	INTEGER NOT NULL,\r\n"
+				+ "	PRIMARY KEY(\"ID\" AUTOINCREMENT)\r\n"
+				+ ");";
+		
+		String commandTableTransfer = "CREATE TABLE IF NOT EXISTS \"TRANSFER\" (\r\n"
+				+ "	\"ID\"	INTEGER NOT NULL,\r\n"
+				+ "	\"SAIDA\"	INTEGER NOT NULL,\r\n"
+				+ "	\"ENTRADA\"	INTEGER NOT NULL,\r\n"
+				+ "	\"VALOR\"	INTEGER NOT NULL,\r\n"
+				+ "	\"DATA\"	INTEGER NOT NULL,\r\n"
+				+ "	PRIMARY KEY(\"ID\" AUTOINCREMENT)\r\n"
+				+ ");";
+		
 		System.out.println("Criando o banco em: " + System.getProperty("user.dir"));
 		
 		try (Connection connection = createConnection()) {
@@ -89,8 +119,31 @@ public class SQLUtil {
 			statement.execute(commandTableCost);
 			statement.execute(commandTableCard);
 			statement.execute(commandTableAccount);
+			statement.execute(commandTableSignature);
+			statement.execute(commandTableReceive);
+			statement.execute(commandTableTransfer);
 			
 			connection.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void substractAccountCost(int account, double valor) {
+		
+		String query   = "UPDATE ACCOUNT \r\n " 
+				+ " SET VALOR_ATUAL = VALOR_ATUAL - ? \r\n " 
+				+ " WHERE ID = ?;";
+		
+		try (Connection connection = createConnection()) {
+			
+			PreparedStatement preparedStmt = connection.prepareStatement(query);
+			preparedStmt.setDouble(1, valor);
+			preparedStmt.setInt   (2, account);
+			
+			preparedStmt.execute();
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -118,6 +171,10 @@ public class SQLUtil {
 			preparedStmt.setBoolean(9, assinatura);
 			
 			preparedStmt.execute();
+			
+			if (conta > 0) {
+				substractAccountCost(conta, valor);
+			}
 			
 			connection.close();
 			
@@ -321,17 +378,27 @@ public class SQLUtil {
 		return result;
 	}
 	
-	public static boolean addReceipt(int id, Double valor) {
+	public static boolean addReceipt(int id, String descricao, Double valor, Date data) {
 		
 		String query = "UPDATE ACCOUNT \r\n " 
 				+ " SET VALOR_ATUAL = VALOR_ATUAL + ? \r\n " 
 				+ " WHERE ID = ?;";
+		
+		String queryReceived = "INSERT INTO RECEIVE (DESCRICAO, ACCOUNT, VALOR, DATA) VALUES (?, ?, ?, ?);";
 		
 		try (Connection connection = createConnection()) {
 		
 			PreparedStatement preparedStmt = connection.prepareStatement(query);
 			preparedStmt.setDouble(1, valor);
 			preparedStmt.setInt   (2, id);
+			
+			preparedStmt.execute();
+			
+			preparedStmt = connection.prepareStatement(queryReceived);
+			preparedStmt.setString(1, descricao);
+			preparedStmt.setInt   (2, id);
+			preparedStmt.setDouble(3, valor);
+			preparedStmt.setDate  (4, data);
 			
 			preparedStmt.execute();
 		
@@ -345,7 +412,7 @@ public class SQLUtil {
 		return true;
 	}
 	
-	public static boolean transferMoney(int idFonte, int idDestino, Double valor) {
+	public static boolean transferMoney(int idFonte, int idDestino, Double valor, Date data) {
 		
 		String queryDestino = "UPDATE ACCOUNT \r\n " 
 				+ " SET VALOR_ATUAL = VALOR_ATUAL + ? \r\n " 
@@ -353,6 +420,8 @@ public class SQLUtil {
 		String queryFonte   = "UPDATE ACCOUNT \r\n " 
 				+ " SET VALOR_ATUAL = VALOR_ATUAL - ? \r\n " 
 				+ " WHERE ID = ?;";
+		
+		String queryTransfer = "INSERT INTO TRANSFER (SAIDA, ENTRADA, VALOR, DATA) VALUES (?, ?, ?, ?);";
 		
 		try (Connection connection = createConnection()) {
 		
@@ -365,6 +434,14 @@ public class SQLUtil {
 			preparedStmt = connection.prepareStatement(queryFonte);
 			preparedStmt.setDouble(1, valor);
 			preparedStmt.setInt   (2, idFonte);
+			
+			preparedStmt.execute();
+			
+			preparedStmt = connection.prepareStatement(queryTransfer);
+			preparedStmt.setDouble(1, idFonte);
+			preparedStmt.setInt   (2, idDestino);
+			preparedStmt.setDouble(3, valor);
+			preparedStmt.setDate  (4, data);
 			
 			preparedStmt.execute();
 		
@@ -381,7 +458,7 @@ public class SQLUtil {
 	public static Double getTotalValueCostMonth(Date start, Date finish) {
 		
 		Double result = 0.0;
-		String query = "SELECT SUM(VALOR_TOTAL) FROM CUSTO WHERE DATA BETWEEN ? AND ?;";
+		String query = "SELECT SUM(VALOR_TOTAL) FROM CUSTO WHERE DATA BETWEEN ? AND ? ORDER BY DATA DESC;";
 		
 		try (Connection connection = createConnection()) {
 			
@@ -408,7 +485,7 @@ public class SQLUtil {
 		List<Cost> costs = new ArrayList<Cost>();
 		List<Account> accounts = getAccounts();
 		List<Card> cards = getCards();
-		String query = "SELECT * FROM CUSTO WHERE DATA BETWEEN ? AND ?;";
+		String query = "SELECT * FROM CUSTO WHERE DATA BETWEEN ? AND ? ORDER BY DATA DESC;";
 		
 		try (Connection connection = createConnection()) {
 			

@@ -34,13 +34,19 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
 import main.java.br.com.savio2503.Financas.tools.Account;
 import main.java.br.com.savio2503.Financas.tools.SQLUtil;
+import main.java.br.com.savio2503.Financas.util.DateLabelFormatter;
 import main.java.br.com.savio2503.Financas.util.JMoneyFieldValor;
 
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -49,6 +55,9 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
+
+import javax.swing.JTextField;
 
 public class AddReceive extends JFrame {
 
@@ -60,6 +69,7 @@ public class AddReceive extends JFrame {
 	
 	private String[] nameAccounts = null;
 	private List<Account> accounts = null;
+	private JTextField textDescricao;
 	
 	private void setupNames() {
 		
@@ -86,14 +96,14 @@ public class AddReceive extends JFrame {
 	public AddReceive() {
 		
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		int x = (int) ((dimension.getWidth() / 2) - (384 / 2));
+		int x = (int) ((dimension.getWidth() / 2) - (570 / 2));
 		int y = (int) ((dimension.getHeight() / 2) - (252 / 2));
 		
 		setupNames();
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(x, y, 384, 252);
-		//setBounds(0, 0, 384, 252);
+		setBounds(x, y, 570, 252);
+		//setBounds(100, 100, 570, 252);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -109,26 +119,52 @@ public class AddReceive extends JFrame {
 		
 		JComboBox comboBoxConta = new JComboBox();
 		comboBoxConta.setModel(new DefaultComboBoxModel(nameAccounts));
-		comboBoxConta.setBounds(145, 52, 200, 22);
+		comboBoxConta.setBounds(145, 52, 213, 22);
 		contentPane.add(comboBoxConta);
 		
 		JLabel lblNewLabel = new JLabel("VALOR A SER ADICIONADO:");
-		lblNewLabel.setBounds(10, 115, 160, 14);
+		lblNewLabel.setBounds(10, 146, 160, 14);
 		contentPane.add(lblNewLabel);
 
 		JMoneyFieldValor formattedValue = new JMoneyFieldValor();
 		formattedValue.setHorizontalAlignment(SwingConstants.RIGHT);
-		formattedValue.setBounds(180, 112, 160, 20);
+		formattedValue.setBounds(180, 143, 178, 20);
 		getContentPane().add(formattedValue);
+		
+		UtilDateModel model = new UtilDateModel();
+		Properties properties = new Properties();
+		properties.put("text.today", "Today");
+		properties.put("text.month", "Month");
+		properties.put("text.year", "Year");
+		JDatePanelImpl datePanel = new JDatePanelImpl(model, properties);
+		JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+		datePicker.setBounds(400, 100, 139, 30);
+		getContentPane().add(datePicker);
+		
+		JLabel lblDescricao = new JLabel("DESCRIÇÃO:");
+		lblDescricao.setBounds(10, 103, 82, 14);
+		contentPane.add(lblDescricao);
+		
+		textDescricao = new JTextField();
+		textDescricao.setHorizontalAlignment(SwingConstants.CENTER);
+		textDescricao.setBounds(98, 100, 260, 20);
+		contentPane.add(textDescricao);
+		textDescricao.setColumns(10);
+		
+		JLabel lblData = new JLabel("SELECIONE A DATA");
+		lblData.setBounds(400, 72, 139, 16);
+		contentPane.add(lblData);
 		
 		JButton btnAdicionar = new JButton("ADICIONAR");
 		btnAdicionar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				int pos = comboBoxConta.getSelectedIndex();
+				String descricao = textDescricao.getText();
 				
-				if (accounts.size() > 0 && pos > 0) {
+				if (accounts.size() > 0 && pos > 0 && !descricao.isBlank() && !datePicker.getJFormattedTextField().getText().isBlank()) {
 					Double valor = 0.0;
+					Date data = Date.valueOf(datePicker.getJFormattedTextField().getText());
 					
 					if (!formattedValue.getText().isBlank()) {
 						String aux = formattedValue.getText();
@@ -141,15 +177,18 @@ public class AddReceive extends JFrame {
 					
 					int id = accounts.get(comboBoxConta.getSelectedIndex() - 1).id;
 					
-					if (SQLUtil.addReceipt(id, valor)) {
+					if (SQLUtil.addReceipt(id, descricao, valor, data)) {
 						System.out.println("Adicionado com sucesso");
+						comboBoxConta.setSelectedIndex(0);
+						textDescricao.setText("");
+						formattedValue.setText("0");
 					} else {
 						System.out.println("Erro ao incrementar");
 					}
 				}
 			}
 		});
-		btnAdicionar.setBounds(112, 174, 100, 23);
+		btnAdicionar.setBounds(221, 178, 100, 23);
 		contentPane.add(btnAdicionar);
 	}
 }
