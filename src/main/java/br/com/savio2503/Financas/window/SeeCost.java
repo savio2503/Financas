@@ -39,6 +39,7 @@ import org.jdatepicker.impl.UtilDateModel;
 
 import main.java.br.com.savio2503.Financas.tools.Cost;
 import main.java.br.com.savio2503.Financas.tools.SQLUtil;
+import main.java.br.com.savio2503.Financas.tools.Signature;
 import main.java.br.com.savio2503.Financas.util.DateLabelFormatter;
 
 import javax.swing.JLabel;
@@ -74,14 +75,12 @@ public class SeeCost extends JFrame {
 	
 	private int monthNow, yearNow;
 	private List<Cost> custos = new ArrayList<Cost>();
+	private List<Signature> signatures = SQLUtil.getAllSignature();
 	private JTable table;
 	JScrollPane scrollPane;
 	private String columnNames[] = {"NUMERO",
 						            "DESCRICAO",
 						            "PARCELAS",
-						            "DATA",
-						            "CONTA",
-						            "CARTAO",
 						            "PAGO",
 						            "ASSINATURA"};
 	
@@ -116,23 +115,39 @@ public class SeeCost extends JFrame {
 		tableModel.setColumnIdentifiers(columnNames);
 		
 		tableModel.setNumRows(0);
+		
+		int i = 1;
+		
+		if (signatures.size() > 0) {
+			for (Signature sign : signatures) {
+				
+				Object[] data = new Object[5];
+				
+				data[0] = i;
+				data[1] = sign.descricao;
+				data[2] = "----";
+				data[3] = "----";
+				data[4] = "true";
+				
+				tableModel.addRow(data);
+				i++;
+			}
+		}
 			
 		if (custos.size() > 0) {
 			
-			for (int i = 0; i < custos.size(); i++) {
+			for (Cost aux : custos) {
 				
-				Object[] data = new Object[8];
+				Object[] data = new Object[5];
 				
 				data[0] = i;
-				data[1] = custos.get(i).descricao;
-				data[2] = custos.get(i).parcelas;
-				data[3] = custos.get(i).data;
-				data[4] = custos.get(i).conta  != null ? custos.get(i).conta : "-------";
-				data[5] = custos.get(i).cartao != null ? custos.get(i).cartao : "-------";
-				data[6] = custos.get(i).isFinish;
-				data[7] = custos.get(i).assinatura;
+				data[1] = aux.descricao;
+				data[2] = aux.parcelas;
+				data[3] = aux.isFinish;
+				data[4] = aux.assinatura;
 				
 				tableModel.addRow(data);
+				i++;
 			}
 			
 		} 

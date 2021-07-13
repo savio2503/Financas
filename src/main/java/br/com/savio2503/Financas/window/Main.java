@@ -211,6 +211,13 @@ public class Main extends JFrame {
 		contentPane.add(separator_2);
 		
 		JButton btnPagarFatura = new JButton("PAGAR FATURA");
+		btnPagarFatura.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				SeeFatura frame = new SeeFatura();
+				frame.setVisible(true);
+			}
+		});
 		btnPagarFatura.setBounds(264, 178, 216, 26);
 		contentPane.add(btnPagarFatura);
 		
@@ -247,7 +254,7 @@ public class Main extends JFrame {
 		Date dtIn = Date.valueOf(datain);
 		Date dtOut = Date.valueOf(dataout);
 		
-		custoMes = SQLUtil.getTotalValueCostMonth(dtIn, dtOut);
+		custoMes = SQLUtil.getTotalValueCostMonth(dtIn, dtOut) + SQLUtil.getSumSignature();
 		label.setText(String.format("%s %.2f", label.getText(), custoMes));
 	}
 	

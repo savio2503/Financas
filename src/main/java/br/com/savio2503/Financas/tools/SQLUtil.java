@@ -59,18 +59,14 @@ public class SQLUtil {
 				+ "	\"CONTA\"	INTEGER,\r\n"
 				+ "	\"CARTAO\"	INTEGER,\r\n"
 				+ "	\"PAGO\"	INTEGER,\r\n"
-				+ "	\"ASSINATURA\"	INTEGER,\r\n"
 				+ "	PRIMARY KEY(\"ID\" AUTOINCREMENT)\r\n"
 				+ ");";
 		
 		String commandTableSignature = "CREATE TABLE IF NOT EXISTS \"SIGNATURE\" (\r\n"
 				+ "	\"ID\"	INTEGER NOT NULL,\r\n"
 				+ "	\"DESCRICAO\"	TEXT NOT NULL,\r\n"
-				+ "	\"VALOR_TOTAL\"	REAL NOT NULL,\r\n"
-				+ "	\"PARCERLAS\"	INTEGER DEFAULT 1,\r\n"
-				+ "	\"DATA\"	DATE NOT NULL,\r\n"
-				+ "	\"VALOR_PAGO\"	REAL DEFAULT 0,\r\n"
-				+ "	\"ANEXO\"	BLOB,\r\n"
+				+ "	\"VALOR\"	REAL NOT NULL,\r\n"
+				+ "	\"DAY\"	INTEGER NOT NULL,\r\n"
 				+ "	\"CARTAO\"	INTEGER,\r\n"
 				+ "	PRIMARY KEY(\"ID\" AUTOINCREMENT)\r\n"
 				+ ");";
@@ -130,31 +126,19 @@ public class SQLUtil {
 		}
 	}
 	
-	private static void substractAccountCost(int account, double valor) {
+	public static boolean addCost(String descricao, Double valor, int parcelas, Date data, byte[] anexo, int conta, int cartao) {
 		
-		String query   = "UPDATE ACCOUNT \r\n " 
+		String query = "INSERT INTO CUSTO \r\n"
+				+ "('DESCRICAO', 'VALOR_TOTAL', 'PARCERLAS', 'DATA', 'ANEXO', 'CONTA', 'CARTAO', 'PAGO') \r\n"
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+		
+		String querySubAccount   = "UPDATE ACCOUNT \r\n " 
 				+ " SET VALOR_ATUAL = VALOR_ATUAL - ? \r\n " 
 				+ " WHERE ID = ?;";
 		
-		try (Connection connection = createConnection()) {
-			
-			PreparedStatement preparedStmt = connection.prepareStatement(query);
-			preparedStmt.setDouble(1, valor);
-			preparedStmt.setInt   (2, account);
-			
-			preparedStmt.execute();
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static boolean addCost(String descricao, Double valor, int parcelas, Date data, byte[] anexo, int conta, int cartao, boolean assinatura) {
-		
-		String query = "INSERT INTO CUSTO \r\n"
-				+ "('DESCRICAO', 'VALOR_TOTAL', 'PARCERLAS', 'DATA', 'ANEXO', 'CONTA', 'CARTAO', 'PAGO', 'ASSINATURA') \r\n"
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		String querySubLimite   = "UPDATE CARD \r\n " 
+				+ " SET LIMITE = LIMITE - ? \r\n " 
+				+ " WHERE ID = ?;";
 		
 		try (Connection connection = createConnection()) {
 			
@@ -167,13 +151,25 @@ public class SQLUtil {
 			preparedStmt.setBytes  (5, anexo);
 			preparedStmt.setInt    (6, conta);
 			preparedStmt.setInt    (7, cartao);
-			preparedStmt.setInt    (8, parcelas == 1 ? 1 : 0);
-			preparedStmt.setBoolean(9, assinatura);
+			preparedStmt.setInt    (8, 1);
 			
 			preparedStmt.execute();
 			
 			if (conta > 0) {
-				substractAccountCost(conta, valor);
+				
+				preparedStmt = connection.prepareStatement(querySubAccount);
+				preparedStmt.setDouble(1, valor);
+				preparedStmt.setInt   (2, conta);
+				
+				preparedStmt.execute();
+				
+			} else if (cartao > 0) {
+			
+				preparedStmt = connection.prepareStatement(querySubLimite);
+				preparedStmt.setDouble(1, valor);
+				preparedStmt.setInt   (2, cartao);
+				
+				preparedStmt.execute();
 			}
 			
 			connection.close();
@@ -184,6 +180,96 @@ public class SQLUtil {
 		}
 		
 		return true;
+	}
+	
+	public static boolean addSignature(String descricao, Double valor, int dia, int cartao) {
+		
+		String query = "INSERT INTO SIGNATURE \r\n"
+				+ "('DESCRICAO', 'VALOR', 'DAY', 'CARTAO') \r\n"
+				+ "VALUES (?, ?, ?, ?);";
+		
+		String querySubLimite   = "UPDATE CARD \r\n " 
+				+ " SET LIMITE = LIMITE - ? \r\n " 
+				+ " WHERE ID = ?;";
+		
+		try (Connection connection = createConnection()) {
+			
+			// create the mysql insert preparedstatement
+			PreparedStatement preparedStmt = connection.prepareStatement(query);
+			preparedStmt.setString (1, descricao);
+			preparedStmt.setDouble (2, valor);
+			preparedStmt.setInt    (3, dia);
+			preparedStmt.setInt    (4, cartao);
+			
+			preparedStmt.execute();
+			
+			preparedStmt = connection.prepareStatement(querySubLimite);
+			preparedStmt.setDouble(1, valor);
+			preparedStmt.setInt   (2, cartao);
+			
+			preparedStmt.execute();
+			
+			connection.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public static List<Signature> getAllSignature() {
+		
+		List<Signature> signatures = new ArrayList<>();
+		
+		try (Connection connection = createConnection()) {
+			
+			Statement stmt = connection.createStatement();
+			ResultSet rs;
+			
+			rs = stmt.executeQuery("SELECT * FROM SIGNATURE");
+			
+			while (rs.next() ) {
+				Signature aux = new Signature();
+				aux.id        = rs.getInt("ID");
+				aux.descricao = rs.getString("DESCRICAO");
+				aux.valor     = rs.getDouble("VALOR");
+				aux.cartao    = rs.getInt("CARTAO");
+				aux.day       = rs.getInt("DAY");
+				
+				signatures.add(aux);
+			}
+			
+			connection.close();
+			
+		}  catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return signatures;
+	}
+	
+	public static Double getSumSignature() {
+		
+		String query = "SELECT SUM(VALOR) FROM SIGNATURE";
+		Double result = 0.0;
+		
+		try (Connection connection = createConnection()) {
+			
+			Statement stmt = connection.createStatement();
+			ResultSet rs;
+			
+			rs = stmt.executeQuery(query);
+			
+			while (rs.next() ) {
+				result = rs.getDouble(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 	
 	public static boolean addCard(String nome, Double limite, int vencimento, int fechamento) {
@@ -508,7 +594,6 @@ public class SQLUtil {
 				int conta = rs.getInt("CONTA");
 				int cartao = rs.getInt("CARTAO");
 				aux.isFinish = rs.getBoolean("PAGO");
-				aux.assinatura = rs.getBoolean("ASSINATURA");
 				
 				if (conta != 0) {
 					for (Account account : accounts) {

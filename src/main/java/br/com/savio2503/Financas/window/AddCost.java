@@ -25,6 +25,7 @@
  */
 package main.java.br.com.savio2503.Financas.window;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 
@@ -131,12 +132,12 @@ public class AddCost extends JFrame {
 		getContentPane().add(lbTitle);
 		
 		JLabel lblDescricao = new JLabel("DESCRI\u00C7\u00C3O:");
-		lblDescricao.setBounds(10, 48, 108, 14);
+		lblDescricao.setBounds(10, 48, 90, 14);
 		getContentPane().add(lblDescricao);
 		
 		textFieldDescricao = new JTextField();
 		textFieldDescricao.setHorizontalAlignment(SwingConstants.CENTER);
-		textFieldDescricao.setBounds(118, 46, 320, 20);
+		textFieldDescricao.setBounds(105, 46, 363, 20);
 		getContentPane().add(textFieldDescricao);
 		textFieldDescricao.setColumns(10);
 		
@@ -163,17 +164,32 @@ public class AddCost extends JFrame {
 		getContentPane().add(datePicker);
 		
 		JLabel lblComprovante = new JLabel("ADD COMPROVANTE:");
-		lblComprovante.setBounds(10, 185, 164, 14);
+		lblComprovante.setBounds(12, 193, 164, 14);
 		getContentPane().add(lblComprovante);
 		
 		JLabel lblConta = new JLabel("ASSOCIAR A UMA CONTA:");
 		lblConta.setBounds(10, 243, 248, 14);
 		getContentPane().add(lblConta);
 		
+		JCheckBox checkBuy = new JCheckBox("PAGO?");
+		checkBuy.setSelected(true);
+		checkBuy.setBounds(245, 135, 80, 24);
+		getContentPane().add(checkBuy);
+		
 		JComboBox comboBoxParcelas = new JComboBox();
 		comboBoxParcelas.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"}));
 		comboBoxParcelas.setSelectedIndex(0);
 		comboBoxParcelas.setBounds(418, 95, 50, 22);
+		comboBoxParcelas.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				
+				if (comboBoxParcelas.getSelectedIndex() > 1) {
+					
+					checkBuy.setSelected(false);
+				}
+				
+			}
+		});
 		getContentPane().add(comboBoxParcelas);
 		
 		JMoneyFieldValor formattedValue = new JMoneyFieldValor();
@@ -181,9 +197,9 @@ public class AddCost extends JFrame {
 		formattedValue.setBounds(95,96,130,20);
 		getContentPane().add(formattedValue);
 		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("ASSINATURA?");
-		chckbxNewCheckBox.setBounds(359, 136, 129, 23);
-		getContentPane().add(chckbxNewCheckBox);
+		JCheckBox checkSignature = new JCheckBox("ASSINATURA?");
+		checkSignature.setBounds(359, 136, 129, 23);
+		getContentPane().add(checkSignature);
 
 		JComboBox comboBoxCard = new JComboBox();
 		JComboBox comboBoxAccount = new JComboBox();
@@ -225,12 +241,12 @@ public class AddCost extends JFrame {
 					
 					Date data = Date.valueOf(dataText);
 					
-					if (saveCost(descricao, valor, parcelas, data, conta, cartao, chckbxNewCheckBox.isSelected())) {
+					if (saveCost(descricao, valor, parcelas, data, conta, cartao, checkSignature.isSelected())) {
 						System.out.println("adicionada com sucesso");
 						textFieldDescricao.setText("");
 						comboBoxParcelas.setSelectedIndex(0);
 						formattedValue.setText("0");
-						chckbxNewCheckBox.setSelected(false);
+						checkSignature.setSelected(false);
 						comboBoxCard.setSelectedIndex(0);
 						comboBoxAccount.setSelectedIndex(0);
 					}
@@ -257,7 +273,7 @@ public class AddCost extends JFrame {
 				}
 			}
 		});
-		btnAnexo.setBounds(171, 180, 193, 23);
+		btnAnexo.setBounds(173, 188, 193, 23);
 		getContentPane().add(btnAnexo);
 		
 		JLabel lblCard = new JLabel("ASSOCIAR A UM CART\u00C3O:");
@@ -299,6 +315,11 @@ public class AddCost extends JFrame {
 		
 		boolean result = false;
 		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(data);
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+		int month = cal.get(Calendar.MONTH);
+		
 		if (parcelas > 1) {
 			if (cartao > 0) {
 				
@@ -312,14 +333,16 @@ public class AddCost extends JFrame {
 					
 					System.out.println("month -> " + dateAux.getMonth());
 					
-					result = SQLUtil.addCost(descricao, valueParcelas, i, dateAux, arquivo, 0, cartao, false);
+					result = SQLUtil.addCost(descricao, valueParcelas, i, dateAux, arquivo, 0, cartao);
 				}
 				
 			} else {
 				System.out.println("parcelas somente para cartoes");
 			}
+		} else if (assinatura) {
+			result = SQLUtil.addSignature(descricao, valor, day, cartao);
 		} else {
-			result = SQLUtil.addCost(descricao, valor, parcelas, data, arquivo, conta, cartao, assinatura);
+			result = SQLUtil.addCost(descricao, valor, parcelas, data, arquivo, conta, cartao);
 		}
 
 		return result;
