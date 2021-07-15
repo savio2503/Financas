@@ -126,7 +126,7 @@ public class SQLUtil {
 		}
 	}
 	
-	public static boolean addCost(String descricao, Double valor, int parcelas, Date data, byte[] anexo, int conta, int cartao) {
+	public static boolean addCost(String descricao, Double valor, int parcelas, Date data, byte[] anexo, int conta, int cartao, boolean pago) {
 		
 		String query = "INSERT INTO CUSTO \r\n"
 				+ "('DESCRICAO', 'VALOR_TOTAL', 'PARCERLAS', 'DATA', 'ANEXO', 'CONTA', 'CARTAO', 'PAGO') \r\n"
@@ -151,7 +151,7 @@ public class SQLUtil {
 			preparedStmt.setBytes  (5, anexo);
 			preparedStmt.setInt    (6, conta);
 			preparedStmt.setInt    (7, cartao);
-			preparedStmt.setInt    (8, 1);
+			preparedStmt.setBoolean(8, pago);
 			
 			preparedStmt.execute();
 			

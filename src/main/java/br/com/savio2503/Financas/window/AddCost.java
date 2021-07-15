@@ -183,7 +183,7 @@ public class AddCost extends JFrame {
 		comboBoxParcelas.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				
-				if (comboBoxParcelas.getSelectedIndex() > 1) {
+				if (comboBoxParcelas.getSelectedIndex() > 0) {
 					
 					checkBuy.setSelected(false);
 				}
@@ -241,7 +241,7 @@ public class AddCost extends JFrame {
 					
 					Date data = Date.valueOf(dataText);
 					
-					if (saveCost(descricao, valor, parcelas, data, conta, cartao, checkSignature.isSelected())) {
+					if (saveCost(descricao, valor, parcelas, data, conta, cartao, checkSignature.isSelected(), checkBuy.isSelected())) {
 						System.out.println("adicionada com sucesso");
 						textFieldDescricao.setText("");
 						comboBoxParcelas.setSelectedIndex(0);
@@ -311,7 +311,7 @@ public class AddCost extends JFrame {
 		getContentPane().add(comboBoxAccount);
 	}
 	
-	private boolean saveCost(String descricao, double valor, int parcelas, Date data, int conta, int cartao, boolean assinatura) {
+	private boolean saveCost(String descricao, double valor, int parcelas, Date data, int conta, int cartao, boolean assinatura, boolean pago) {
 		
 		boolean result = false;
 		
@@ -333,7 +333,7 @@ public class AddCost extends JFrame {
 					
 					System.out.println("month -> " + dateAux.getMonth());
 					
-					result = SQLUtil.addCost(descricao, valueParcelas, i, dateAux, arquivo, 0, cartao);
+					result = SQLUtil.addCost(descricao, valueParcelas, i, dateAux, arquivo, 0, cartao, pago);
 				}
 				
 			} else {
@@ -342,7 +342,7 @@ public class AddCost extends JFrame {
 		} else if (assinatura) {
 			result = SQLUtil.addSignature(descricao, valor, day, cartao);
 		} else {
-			result = SQLUtil.addCost(descricao, valor, parcelas, data, arquivo, conta, cartao);
+			result = SQLUtil.addCost(descricao, valor, parcelas, data, arquivo, conta, cartao, pago);
 		}
 
 		return result;
