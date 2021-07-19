@@ -44,6 +44,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.Color;
 
 public class Main extends JFrame {
 
@@ -73,7 +74,7 @@ public class Main extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(x, y, 500, 404);
-		//setBounds(100, 100, 500, 404);
+//		setBounds(100, 100, 500, 404);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -145,6 +146,7 @@ public class Main extends JFrame {
 		contentPane.add(btnRecebimento);
 		
 		JSeparator separator = new JSeparator();
+		separator.setForeground(Color.BLACK);
 		separator.setBounds(22, 233, 216, 2);
 		contentPane.add(separator);
 		
@@ -174,10 +176,10 @@ public class Main extends JFrame {
 		btnModCusto.setBounds(21, 333, 217, 23);
 		contentPane.add(btnModCusto);
 		
-		JLabel lblNewLabel = new JLabel("MODIFICAR");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBounds(21, 240, 217, 14);
-		contentPane.add(lblNewLabel);
+		JLabel lblModificar = new JLabel("MODIFICAR");
+		lblModificar.setHorizontalAlignment(SwingConstants.CENTER);
+		lblModificar.setBounds(21, 240, 217, 14);
+		contentPane.add(lblModificar);
 		
 		JButton btnTransferencia = new JButton("TRANSFERIR");
 		btnTransferencia.addMouseListener(new MouseAdapter() {
@@ -191,8 +193,9 @@ public class Main extends JFrame {
 		contentPane.add(btnTransferencia);
 		
 		JSeparator separator_1 = new JSeparator();
+		separator_1.setForeground(Color.BLACK);
 		separator_1.setOrientation(SwingConstants.VERTICAL);
-		separator_1.setBounds(250, 97, 2, 260);
+		separator_1.setBounds(250, 97, 5, 260);
 		contentPane.add(separator_1);
 		
 		JButton btnCustoMes = new JButton("VER CUSTOS");
@@ -225,13 +228,18 @@ public class Main extends JFrame {
 		separator_3.setBounds(264, 254, 216, 2);
 		contentPane.add(separator_3);
 		
-		JButton btnTarget = new JButton("OBJETIVOS");
-		btnTarget.setBounds(264, 263, 216, 26);
-		contentPane.add(btnTarget);
+		JButton btnCompras = new JButton("COMPRAS FUTURAS");
+		btnCompras.setBounds(264, 263, 216, 26);
+		contentPane.add(btnCompras);
 		
-		JButton btnFuture = new JButton("FATURA FUTURAS");
-		btnFuture.setBounds(264, 216, 216, 26);
-		contentPane.add(btnFuture);
+		JLabel lblObjetivos = new JLabel("OBJETIVOS");
+		lblObjetivos.setHorizontalAlignment(SwingConstants.CENTER);
+		lblObjetivos.setBounds(264, 233, 216, 16);
+		contentPane.add(lblObjetivos);
+		
+		JButton btnInvestimentos = new JButton("INVESTIMENTOS");
+		btnInvestimentos.setBounds(264, 296, 216, 29);
+		contentPane.add(btnInvestimentos);
 	}
 	
 	private double total, custoMes;

@@ -29,9 +29,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -50,6 +49,7 @@ import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 
 import main.java.br.com.savio2503.Financas.tools.Card;
+import main.java.br.com.savio2503.Financas.tools.Cost;
 import main.java.br.com.savio2503.Financas.tools.SQLUtil;
 import main.java.br.com.savio2503.Financas.util.DateLabelFormatter;
 import main.java.br.com.savio2503.Financas.util.JMoneyFieldValor;
@@ -96,7 +96,7 @@ public class SeeFatura extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(x, y, 634, 187);
-		//setBounds(100, 100, 634, 187);
+//		setBounds(100, 100, 634, 187);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -116,8 +116,8 @@ public class SeeFatura extends JFrame {
 		properties.put("text.year", "Year");
 		JDatePanelImpl datePanel = new JDatePanelImpl(model, properties);
 		datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-		datePicker.setBounds(251, 51, 139, 30);
-		datePicker.getJFormattedTextField().setText(LocalDate.now().toString());
+		datePicker.setBounds(225, 51, 196, 30);
+//		datePicker.getJFormattedTextField().setText(LocalDate.now().toString());
 		getContentPane().add(datePicker);
 		
 		comboBox = new JComboBox();
@@ -125,9 +125,9 @@ public class SeeFatura extends JFrame {
 		comboBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				
-				if (cards.size() > 0 && comboBox.getSelectedIndex() > 0) {
+				if (cards.size() > 0 && comboBox.getSelectedIndex() > 0 && !datePicker.getJFormattedTextField().getText().isBlank()) {
 					
-					String valorASerPago = buscarFatura();
+					buscarFatura();
 				}
 				
 			}
@@ -158,22 +158,75 @@ public class SeeFatura extends JFrame {
 	private String buscarFatura() {
 		
 		Card card = cards.get(comboBox.getSelectedIndex() - 1);
-		
 		int diaFechamento = card.fechamento;
+		int diaVencimento = card.vencimento;
+
+		Calendar dtSelect = Calendar.getInstance();
+		dtSelect.setTime((Date) datePicker.getModel().getValue());
+		
+		//data de agora
+		Calendar calFechamento = Calendar.getInstance();
+		calFechamento.set(Calendar.DAY_OF_MONTH, diaFechamento);
+		
+		Calendar calVencimento = Calendar.getInstance();
+		calVencimento.set(Calendar.DAY_OF_MONTH, diaVencimento);
 		
 		try {
-			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(datePicker.getJFormattedTextField().getText());
-			date.setDate(diaFechamento);
 			
-			Date now = new SimpleDateFormat("yyyy-MM-dd").parse(LocalDate.now().toString());
+//			1 = depois, -1 = antes
+
+			if (dtSelect.compareTo(calFechamento) == 1 && dtSelect.compareTo(calVencimento) == -1) { //entre o fechamento e vencimento
+				
+				Calendar monthPass = Calendar.getInstance();
+				
+				int month = calFechamento.get(Calendar.MONTH);
+				
+				
+				if (month == 0) {
+					
+					int year = calFechamento.get(Calendar.YEAR);
+					
+					month = 11;
+					year -= 1;
+					
+					monthPass.set(Calendar.MONTH, month);
+					monthPass.set(Calendar.YEAR, year);
+					
+				} else {
+					
+					month -= 1;
+					monthPass.set(Calendar.MONTH, month);
+				}
+				
+				monthPass.set(Calendar.DAY_OF_MONTH, diaFechamento);
+				
+				java.sql.Date pass = new java.sql.Date(monthPass.getTimeInMillis());
+				java.sql.Date fech = new java.sql.Date(calFechamento.getTimeInMillis());
+				
+				System.out.println("p: " + monthPass.getTime());
+				System.out.println("n: " + calFechamento.getTime());
+				
+				List<Cost> costs = SQLUtil.getCostMonth(pass, fech);
+				
+				if (costs.size() == 0) {
+					lblDescricao.setText("NAO HA CONTA PARA PAGAR NESSE MES");
+				} else {
+					
+					Double valor = 0.0;
+					
+					for (Cost cost : costs) {
+						valor += cost.valor;
+					}
+					
+					lblDescricao.setText("VALOR A PAGAR: R$ " + valor);
+					formattedValue.setText(String.format("%.2f", valor));
+				}
+				
+			} else { //antes do fechamento
+				lblDescricao.setText("FATURA AINDA NAO FOI FECHADA");
+			} 
 			
-			if (now.before(date)) {
-				lblDescricao.setText("depois");
-			} else {
-				lblDescricao.setText("antes");
-			}
-			
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

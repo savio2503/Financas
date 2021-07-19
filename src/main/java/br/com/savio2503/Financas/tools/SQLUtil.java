@@ -323,14 +323,6 @@ public class SQLUtil {
 		return true;
 		
 	}
-
-	public static List<Cost> getCosts(Boolean pago, Integer mes, Integer card, Integer account) {
-		
-		List<Cost> result = new ArrayList<Cost>();
-		
-		
-		return result;
-	}
 	
 	public static List<Card> getCards() {
 		
@@ -579,6 +571,8 @@ public class SQLUtil {
 			preparedStmt.setDate(1, start);
 			preparedStmt.setDate(2, finish);
 			
+			System.out.println(String.format("sql: SELECT * FROM CUSTO WHERE DATA BETWEEN %d AND %d ORDER BY DATA DESC", start.getTime(), finish.getTime()));
+			
 			preparedStmt.execute();
 			
 			ResultSet rs = preparedStmt.getResultSet();
@@ -611,7 +605,8 @@ public class SQLUtil {
 					}
 				}
 				
-				costs.add(aux);
+				if (aux.isFinish == false)
+					costs.add(aux);
 				
 			}
 		} catch (Exception e) {

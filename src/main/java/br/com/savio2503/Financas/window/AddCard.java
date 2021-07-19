@@ -56,11 +56,12 @@ public class AddCard extends JFrame {
 	public AddCard() {
 		
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		int x = (int) ((dimension.getWidth() / 2) - (517 / 2));
-		int y = (int) ((dimension.getHeight() / 2) - (257 / 2));
+		int x = (int) ((dimension.getWidth() / 2) - (464 / 2));
+		int y = (int) ((dimension.getHeight() / 2) - (217 / 2));
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(x, y, 517, 257);
+		setBounds(x, y, 464, 217);
+//		setBounds(100, 100, 464, 217);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -79,22 +80,12 @@ public class AddCard extends JFrame {
 		contentPane.add(lblLimite);
 		
 		JLabel lblVencimento = new JLabel("VENCIMENTO:");
-		lblVencimento.setBounds(10, 100, 80, 14);
+		lblVencimento.setBounds(10, 100, 100, 14);
 		contentPane.add(lblVencimento);
 		
 		JLabel lblFechamento = new JLabel("FECHAMENTO:");
-		lblFechamento.setBounds(233, 100, 90, 14);
+		lblFechamento.setBounds(233, 100, 107, 14);
 		contentPane.add(lblFechamento);
-		
-		JButton btnNewButton = new JButton("CANCELAR");
-		btnNewButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-			}
-		});
-		btnNewButton.setBounds(262, 184, 100, 23);
-		contentPane.add(btnNewButton);
 		
 		JTextField textName = new JTextField();
 		textName.setHorizontalAlignment(SwingConstants.CENTER);
@@ -109,12 +100,12 @@ public class AddCard extends JFrame {
 		
 		JComboBox comboBoxVencimento = new JComboBox();
 		comboBoxVencimento.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"}));
-		comboBoxVencimento.setBounds(110, 100, 52, 22);
+		comboBoxVencimento.setBounds(122, 97, 72, 22);
 		contentPane.add(comboBoxVencimento);
 		
 		JComboBox comboBoxFechamento = new JComboBox();
 		comboBoxFechamento.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"}));
-		comboBoxFechamento.setBounds(330, 100, 52, 22);
+		comboBoxFechamento.setBounds(352, 97, 72, 22);
 		contentPane.add(comboBoxFechamento);
 		
 		JButton btnAdicionar = new JButton("ADICIONAR");
@@ -122,8 +113,8 @@ public class AddCard extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				String nome = textName.getText();
-				int vencimento = Integer.parseInt((String) comboBoxVencimento.getSelectedItem());
-				int fechamento = Integer.parseInt((String) comboBoxFechamento.getSelectedItem());
+				int fechamento = Integer.parseInt((String) comboBoxVencimento.getSelectedItem());
+				int vencimento = Integer.parseInt((String) comboBoxFechamento.getSelectedItem());
 				
 				Double limite = 0.0;
 				
@@ -141,7 +132,7 @@ public class AddCard extends JFrame {
 				}
 			}
 		});
-		btnAdicionar.setBounds(133, 184, 100, 23);
+		btnAdicionar.setBounds(179, 145, 100, 23);
 		contentPane.add(btnAdicionar);
 	}
 }
