@@ -59,31 +59,28 @@ public class AddAccount extends JFrame {
 		
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		int x = (int) ((dimension.getWidth() / 2) - (349 / 2));
-		int y = (int) ((dimension.getHeight() / 2) - (237 / 2));
+		int y = (int) ((dimension.getHeight() / 2) - (203 / 2));
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(x, y, 349, 237);
-		//setBounds(100, 100, 349, 237);
+		setBounds(x, y, 349, 203);
+//		setBounds(100, 100, 349, 203);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("ADICIONAR BANCO");
-		lblNewLabel.setBounds(120, 11, 110, 14);
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(10, 11, 333, 14);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblNome = new JLabel("NOME:");
 		lblNome.setBounds(10, 50, 46, 14);
 		contentPane.add(lblNome);
 		
-		JLabel lblValor = new JLabel("VALOR ATUAL:      R$");
+		JLabel lblValor = new JLabel("VALOR ATUAL: R$");
 		lblValor.setBounds(10, 90, 132, 14);
 		contentPane.add(lblValor);
-		
-		JButton btnCancelar = new JButton("CANCELAR");
-		btnCancelar.setBounds(185, 156, 100, 23);
-		contentPane.add(btnCancelar);
 		
 		textNome = new JTextField();
 		textNome.setHorizontalAlignment(SwingConstants.CENTER);
@@ -123,7 +120,7 @@ public class AddAccount extends JFrame {
 				}
 			}
 		});
-		btnAdicionar.setBounds(35, 156, 107, 23);
+		btnAdicionar.setBounds(115, 133, 107, 23);
 		contentPane.add(btnAdicionar);
 	}
 }

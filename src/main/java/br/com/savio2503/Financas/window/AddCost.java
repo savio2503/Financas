@@ -122,7 +122,7 @@ public class AddCost extends JFrame {
 		setupNames();
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		//setBounds(100, 100, 500, 413);
+//		setBounds(100, 100, 500, 413);
 		setBounds(x, y, 500, 413);
 		getContentPane().setLayout(null);
 		
@@ -146,7 +146,7 @@ public class AddCost extends JFrame {
 		getContentPane().add(lblValor);
 		
 		JLabel lblParcelas = new JLabel("QUANT. PARCELAS: ");
-		lblParcelas.setBounds(293, 99, 123, 14);
+		lblParcelas.setBounds(261, 99, 130, 14);
 		getContentPane().add(lblParcelas);
 		
 		JLabel lblData = new JLabel("DATA:");
@@ -179,7 +179,7 @@ public class AddCost extends JFrame {
 		JComboBox comboBoxParcelas = new JComboBox();
 		comboBoxParcelas.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"}));
 		comboBoxParcelas.setSelectedIndex(0);
-		comboBoxParcelas.setBounds(418, 95, 50, 22);
+		comboBoxParcelas.setBounds(396, 95, 72, 22);
 		comboBoxParcelas.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				

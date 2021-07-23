@@ -103,32 +103,33 @@ public class AddReceive extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(x, y, 570, 252);
-		//setBounds(100, 100, 570, 252);
+//		setBounds(100, 100, 570, 252);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblTitle = new JLabel("ADICIONAR DINHEIRO");
-		lblTitle.setBounds(140, 11, 200, 14);
+		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitle.setBounds(10, 11, 554, 14);
 		contentPane.add(lblTitle);
 		
 		JLabel lblConta = new JLabel("SELECIONE A CONTA:");
-		lblConta.setBounds(10, 56, 125, 14);
+		lblConta.setBounds(10, 56, 135, 14);
 		contentPane.add(lblConta);
 		
 		JComboBox comboBoxConta = new JComboBox();
 		comboBoxConta.setModel(new DefaultComboBoxModel(nameAccounts));
-		comboBoxConta.setBounds(145, 52, 213, 22);
+		comboBoxConta.setBounds(160, 52, 213, 22);
 		contentPane.add(comboBoxConta);
 		
 		JLabel lblNewLabel = new JLabel("VALOR A SER ADICIONADO:");
-		lblNewLabel.setBounds(10, 146, 160, 14);
+		lblNewLabel.setBounds(10, 146, 180, 14);
 		contentPane.add(lblNewLabel);
 
 		JMoneyFieldValor formattedValue = new JMoneyFieldValor();
 		formattedValue.setHorizontalAlignment(SwingConstants.RIGHT);
-		formattedValue.setBounds(180, 143, 178, 20);
+		formattedValue.setBounds(200, 143, 178, 20);
 		getContentPane().add(formattedValue);
 		
 		UtilDateModel model = new UtilDateModel();

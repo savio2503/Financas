@@ -97,7 +97,7 @@ public class Transfer extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(x, y, 300, 314);
-		//setBounds(100, 100, 300, 314);
+//		setBounds(100, 100, 300, 314);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -118,12 +118,12 @@ public class Transfer extends JFrame {
 		
 		JComboBox CBFonte = new JComboBox();
 		CBFonte.setModel(new DefaultComboBoxModel(nameAccounts));
-		CBFonte.setBounds(80, 48, 190, 25);
+		CBFonte.setBounds(80, 48, 209, 25);
 		contentPane.add(CBFonte);
 		
 		JComboBox CBDestino = new JComboBox();
 		CBDestino.setModel(new DefaultComboBoxModel(nameAccounts));
-		CBDestino.setBounds(80, 95, 190, 25);
+		CBDestino.setBounds(82, 96, 207, 25);
 		contentPane.add(CBDestino);
 		
 		JLabel lblValor = new JLabel("VALOR:");
@@ -132,7 +132,7 @@ public class Transfer extends JFrame {
 		
 		JMoneyFieldValor formattedValue = new JMoneyFieldValor();
 		formattedValue.setHorizontalAlignment(SwingConstants.RIGHT);
-		formattedValue.setBounds(80, 145, 190, 20);
+		formattedValue.setBounds(80, 145, 209, 20);
 		getContentPane().add(formattedValue);
 		
 		UtilDateModel model = new UtilDateModel();
@@ -142,7 +142,7 @@ public class Transfer extends JFrame {
 		properties.put("text.year", "Year");
 		JDatePanelImpl datePanel = new JDatePanelImpl(model, properties);
 		JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-		datePicker.setBounds(130, 185, 139, 30);
+		datePicker.setBounds(150, 185, 139, 30);
 		getContentPane().add(datePicker);
 		
 		JButton btnTransferir = new JButton("TRANSFERIR");
@@ -189,7 +189,7 @@ public class Transfer extends JFrame {
 		contentPane.add(btnTransferir);
 		
 		JLabel lblData = new JLabel("SELECIONE A DATA:");
-		lblData.setBounds(10, 190, 113, 14);
+		lblData.setBounds(10, 192, 133, 14);
 		contentPane.add(lblData);
 	}
 }

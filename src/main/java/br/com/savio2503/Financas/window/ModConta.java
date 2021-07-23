@@ -90,13 +90,14 @@ public class ModConta extends JFrame {
 	public ModConta() {
 		
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		int x = (int) ((dimension.getWidth() / 2) - (325 / 2));
-		int y = (int) ((dimension.getHeight() / 2) - (250 / 2));
+		int x = (int) ((dimension.getWidth() / 2) - (305 / 2));
+		int y = (int) ((dimension.getHeight() / 2) - (233 / 2));
 		
 		setupNames();
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(x, y, 325, 250);
+		setBounds(x, y, 305, 233);
+//		setBounds(5, 5, 305, 233);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

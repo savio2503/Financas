@@ -82,14 +82,14 @@ public class ModCard extends JFrame {
 	public ModCard() {
 		
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		int x = (int) ((dimension.getWidth() / 2) - (313 / 2));
+		int x = (int) ((dimension.getWidth() / 2) - (290 / 2));
 		int y = (int) ((dimension.getHeight() / 2) - (352 / 2));
 		
 		setupNames();
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(x, y, 313, 352);
-		//setBounds(5, 5, 313, 352);
+		setBounds(x, y, 290, 352);
+//		setBounds(5, 5, 290, 352);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -109,11 +109,11 @@ public class ModCard extends JFrame {
 		contentPane.add(lblLimite);
 		
 		JLabel lblVencimento = new JLabel("VENCIMENTO:");
-		lblVencimento.setBounds(12, 168, 80, 14);
+		lblVencimento.setBounds(12, 168, 90, 14);
 		contentPane.add(lblVencimento);
 		
 		JLabel lblFechamento = new JLabel("FECHAMENTO:");
-		lblFechamento.setBounds(10, 212, 90, 14);
+		lblFechamento.setBounds(10, 212, 100, 14);
 		contentPane.add(lblFechamento);
 		
 		JTextField textName = new JTextField();
@@ -129,12 +129,12 @@ public class ModCard extends JFrame {
 		
 		JComboBox comboBoxVencimento = new JComboBox();
 		comboBoxVencimento.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"}));
-		comboBoxVencimento.setBounds(110, 164, 52, 22);
+		comboBoxVencimento.setBounds(120, 164, 72, 22);
 		contentPane.add(comboBoxVencimento);
 		
 		JComboBox comboBoxFechamento = new JComboBox();
 		comboBoxFechamento.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28"}));
-		comboBoxFechamento.setBounds(110, 208, 52, 22);
+		comboBoxFechamento.setBounds(120, 208, 72, 22);
 		contentPane.add(comboBoxFechamento);
 		
 		JComboBox comboBox = new JComboBox();

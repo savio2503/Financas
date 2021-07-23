@@ -68,7 +68,8 @@ public class AddCard extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("ADICIONAR CART\u00C3O");
-		lblNewLabel.setBounds(190, 11, 150, 14);
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(10, 11, 448, 14);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblNome = new JLabel("NOME:");

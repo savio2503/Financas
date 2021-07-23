@@ -166,9 +166,9 @@ public class SeeCost extends JFrame {
 		int x = (int) ((dimension.getWidth() / 2) - (598 / 2));
 		int y = (int) ((dimension.getHeight() / 2) - (478 / 2));
 		
-		//setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(x, y, 598, 478);
-		//setBounds(100, 100, 598, 478);
+//		setBounds(100, 100, 598, 478);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -225,7 +225,7 @@ public class SeeCost extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("SELECIONE O M\u00CAS:");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel.setBounds(257, 55, 152, 16);
+		lblNewLabel.setBounds(257, 48, 152, 16);
 		contentPane.add(lblNewLabel);
 		
 		JButton btnExtract = new JButton("EXTRAIR ANEXO");
